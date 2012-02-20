@@ -1,0 +1,20 @@
+<div class="block block-wiki">
+    <div class="block-header">
+        <h2>Wiki</h2>
+    </div>
+    <div class="block-content">
+        <div class="block-wrapper">  
+            <div class="wiki-list">                       
+                <dl><dt><a href="#">How to run the application</a></dt> <dd>Last modified by <strong>(who)</strong> at  2009-01-31 21:21</dd></dl>
+                <dl><dt><a href="#">Simple tutorial</a></dt> <dd>Last modified by <strong>(who)</strong> at  2009-01-31 21:21</dd></dl>
+                <dl><dt><a href="#">Documentation</a></dt> <dd>Last modified by <strong>(who)</strong> at  2009-01-31 21:21</dd></dl>
+                <dl><dt><a href="#">How to run the application</a></dt> <dd>Last modified by <strong>(who)</strong> at  2009-01-31 21:21</dd></dl>
+                <dl><dt><a href="#">Simple tutorial</a></dt> <dd>Last modified by <strong>(who)</strong> at  2009-01-31 21:21</dd></dl>
+                <dl><dt><a href="#">Documentation</a></dt> <dd>Last modified by <strong>(who)</strong> at  2009-01-31 21:21</dd></dl>
+            </div>
+            <div class="block-new">
+                <a href="#" class="button">New Page</a>
+            </div>
+        </div>
+    </div>
+</div>

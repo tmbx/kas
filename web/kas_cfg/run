@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Use this script if you want to develop in this local repository with your own
+# development.ini file.
+# 
+# You *must* have a development environment that is compatible with the
+# production environment, i.e. kpython and the other packages must be installed.
+
+export PYTHONPATH=`pwd`/../../python:`pwd`/../python/base:$PYTHONPATH
+
+DEVELOPMENT_FILE=development.ini.stock
+if [ -f development.ini ]; then
+    DEVELOPMENT_FILE=development.ini
+fi
+
+(mkdir -p kascfg/public/applets/ && cd kascfg/public/applets/ && ln -fs  ../../../../www/applets/base .)
+(mkdir -p kascfg/public/css/ && cd kascfg/public/css/ && ln -fs ../../../../www/css/base .)
+(mkdir -p kascfg/public/html/ && cd kascfg/public/html/ && ln -fs  ../../../../www/html/base .)
+(mkdir -p kascfg/public/images/ && cd kascfg/public/images/ && ln -fs  ../../../../www/images/base .)
+(mkdir -p kascfg/public/javascripts/ && cd kascfg/public/javascripts/ && ln -fs  ../../../../www/javascripts/base .)
+paster serve $DEVELOPMENT_FILE --reload
+

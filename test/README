@@ -1,0 +1,1 @@
+This has been hacked to test the anp, the kcd must be build first in order to build ../build/kcdcommon/anp.o which is required by the tests SConscript. It should be integrated in the build system at some point.

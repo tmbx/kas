@@ -1,0 +1,7 @@
+<div id="footer">
+    <hr />
+    <div class="wrapper">            
+        <p class="footer-copy">&copy; 2012 Opersys inc. All rights reserved. </p>
+        <p class="footer-links"><a href="${url('license')}" target="_blank">License</a> - <a href="http://www.teambox.co" target="_blank">About</a></p>
+    </div>
+</div>

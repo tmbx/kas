@@ -1,0 +1,131 @@
+#!/usr/bin/make -f
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+
+clean:
+	dh_testdir
+	dh_testroot
+	
+	rm -f debian/build-stamp
+	rm -rf build .sconsign.dblite *.pyc
+
+	dh_clean
+
+
+build: debian/build-stamp 
+debian/build-stamp: build-set-config
+	dh_testdir
+	
+	scons build
+	
+	touch $@
+
+build-set-config:
+	scons config \
+	      debug=1 \
+	      kcd=0 \
+	      ktlstunnel=0 \
+	      vnc=0 \
+	      kcdpg=0 \
+	      libktools_include=/usr/include/libktools \
+	      libktools_lib=/usr/lib \
+	      BINDIR=/usr/bin \
+	      PGPKGLIBDIR=`pg_config --pkglibdir`
+
+	
+install: build
+	dh_testdir
+	dh_testroot
+	
+	# KCD daemons.
+	mkdir -p debian/kcd/etc/init.d/
+	mkdir -p debian/kcd/etc/teambox/kcd
+	mkdir -p debian/kcd/etc/teambox/kcd/kmod_db
+	mkdir -p debian/kcd/etc/teambox/kcd/mail
+	mkdir -p debian/kcd/etc/teambox/base-config
+	mkdir -p debian/kcd/var/teambox/kas/kfs
+	mkdir -p debian/kcd/mnt/kas_kfs
+	scons install kcd=1 ktlstunnel=0 vnc=0 kcdpg=0 DESTDIR=$(CURDIR)/debian/kcd
+	for file in invite invite_custom_msg invite_default_msg notif freemium_confirm; do \
+	    cp kcd/config/mail/$$file.tmpl debian/kcd/etc/teambox/kcd/mail/$$file.tmpl.stock; \
+        done
+	for file in kasmond kcd kcdnotif; do \
+	    cp debian/init.d/$$file debian/kcd/etc/init.d/$$file; \
+	done
+	for file in kasmond kcdhelper; do cp python/$$file debian/kcd/usr/bin/$$file; done
+	cp kcd/config/kcd_db.sqlpy debian/kcd/etc/teambox/base-config/
+	
+	# KCD Postgres library.
+	scons install kcd=0 ktlstunnel=0 vnc=0 kcdpg=1 DESTDIR=$(CURDIR)/debian/libkcdpg
+	
+	# Ktlstunnel.
+	scons install kcd=0 ktlstunnel=1 vnc=0 kcdpg=0 DESTDIR=$(CURDIR)/debian/ktlstunnel
+	
+	# VNC reflector.
+	scons install kcd=0 ktlstunnel=0 vnc=1 kcdpg=0 DESTDIR=$(CURDIR)/debian/vncreflector
+	mv debian/vncreflector/usr/bin/vncreflector debian/vncreflector/usr/bin/vncreflector.bin
+	cp -f vnc_reflector/vncreflector.py debian/vncreflector/usr/bin/vncreflector
+	
+	# kas-python.
+	( cd python && make install DESTDIR=$(CURDIR)/debian/kas-python DEBIAN=1 )
+	
+	# kas-web-base, kas-cfg, KWMO common part.
+	( cd web && make install DEBIANDIR=$(CURDIR) )
+	
+	# kas-cfg.
+	mkdir -p debian/kas-cfg/etc/teambox/base-config
+	cp web/db/kas_cfg/kas_cfg_db.sqlpy debian/kas-cfg/etc/teambox/base-config/
+	
+	# kwmo.
+	mkdir -p debian/kwmo/usr/bin/
+	mkdir -p debian/kwmo/etc/cron.d/
+	mkdir -p debian/kwmo/etc/init.d/
+	mkdir -p debian/kwmo/etc/teambox/base-config/
+	mkdir -p debian/kwmo/var/teambox/kwsfetcher/workspaces/
+	mkdir -p debian/kwmo/var/teambox/vnc_meta/vnc_cred/
+	cat web/db/kwmo/kwmo_db_init_tmpl.sqlpy web/db/kwmo/kwmo_db_models_tmpl.sqlpy >\
+		debian/kwmo/etc/teambox/base-config/kwmo_db.sqlpy
+	ln -s /usr/share/teambox/web/python/kwmo/kwsfetcher debian/kwmo/usr/bin/kwsfetcher
+	cp debian/init.d/kwsfetcher debian/kwmo/etc/init.d/
+	cp debian/cron.d/pubws_stats debian/kwmo/etc/cron.d/
+	
+	# freemium.
+	mkdir -p debian/freemium/etc/teambox/base-config
+	cp web/db/freemium/freemium_db.sqlpy debian/freemium/etc/teambox/base-config/
+	echo "1.10" > debian/kcd-vm/etc/teambox/products/kcd/product_version
+	mkdir -p debian/freemium/etc/teambox/products/freemium/
+	echo "Teambox License Management Portal" > debian/freemium/etc/teambox/products/freemium/product_name
+	echo "1.10" > debian/freemium/etc/teambox/products/freemium/product_version
+
+binary-common:
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs 
+	dh_installdocs
+	dh_pysupport
+	dh_installman
+	dh_strip
+	dh_compress 
+	dh_fixperms
+	dh_makeshlibs
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+
+binary-indep:
+binary-arch: build install
+	$(MAKE) -f debian/rules DH_OPTIONS=-s binary-common
+
+binary: binary-arch binary-indep
+
+
+.PHONY: build clean binary-indep binary-arch binary install
+

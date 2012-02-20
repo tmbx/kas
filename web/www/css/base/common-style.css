@@ -1,0 +1,72 @@
+/* common css */
+
+body {
+    font-family: Verdana, sans-serif;
+    color: black;
+    background: white;
+}
+
+#autologin_label { font-size: 75%; }
+
+#wrapper {
+    width: 800px;
+    text-align: left;
+    margin: 0;
+    padding: 0;
+}
+
+table.layout { 
+    width: 100%;
+    text-align: left;
+    margin: 0;
+    padding: 0; 
+    vertical-align: top;
+}
+table.layout > tr {
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    vertical-align: top;
+}
+table.layout > tr > td {
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    vertical-align: top;
+}
+
+#notice  { 
+    background: #2e2;
+    color: #222; 
+    padding: 0.2em;
+    margin-bottom: 1em;
+    font-size: smaller;
+}
+
+#warn {
+    background: #ee0;
+    color: #222; 
+    padding: 0.2em;
+}
+
+#error {
+    background: #e22;
+    color: #fff;
+    padding: 0.2em;
+    font-size: smaller;
+}
+
+#copyright {
+    text-align: right;
+    margin-top: 85px;
+    margin-bottom: 10px;
+    font-size: 9px;
+}
+
+#copyright_not_logged {
+    text-align: center;
+    margin-top: 130px;
+    margin-bottom: 10px;
+    font-size: 9px;
+}
+

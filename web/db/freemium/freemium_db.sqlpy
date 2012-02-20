@@ -1,0 +1,45 @@
+# Create database if not existing.
+<<< isset(drop), isdb(freemium), print(Dropping database freemium.), dropdb(freemium) >>>
+
+# Exit if we don't need to create database.
+<<< isnotset(create), exit() >>>
+
+# Create database if needed.
+<<< isnodb(freemium), print(Creating database freemium.), createdb(freemium) >>>
+
+# Exit if we don't need to create the schema.
+<<< isset(noschema), exit() >>>
+
+# Connect to the database.
+<<< connect(freemium) >>>
+
+# Create the Freemium fix table if required.
+<<< isnotable(freemium_fix_table), print(Creating Freemium fix table.) >>>
+
+-- Applied fixes table.
+CREATE TABLE freemium_fix_table (
+
+    -- Name of the applied fix.
+    name varchar PRIMARY KEY
+);
+
+# Create the freemium tables if required.
+<<< isnotable(freemium_users), print(Creating freemium tables.) >>>
+
+-- Freemium users table.
+CREATE TABLE freemium_users (
+	id SERIAL NOT NULL,
+	email TEXT NOT NULL,
+	pwd TEXT,
+	license TEXT,
+	nonce TEXT,
+	org_id INTEGER,
+    note TEXT,
+    created_on bigint,
+	PRIMARY KEY (id),
+	UNIQUE (email)
+);
+
+-- Insert the applied fixes.
+INSERT INTO freemium_fix_table (name) VALUES ('update-2.1');
+

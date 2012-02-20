@@ -1,0 +1,3 @@
+class KAjaxViewException(Exception):
+    pass
+

@@ -1,0 +1,52 @@
+
+<div id="header">
+    <div class="wrapper">
+        <div class="teambox-logo">
+            <a href="http://www.teambox.co" target="_blank"></a>
+        </div>
+
+        <div class="header-main">
+            <div class="header-logo">
+                % if c.workspace and c.workspace.public and c.email_info:
+                <div class="pubws-title">Attachments for:</div>
+                <div class="pubws-subject">${h.string_cut(c.email_info['subject'], 26)}</div>
+                % else:
+                <h1>Teambox Portal</h1>
+                % endif
+            </div>
+            <div class="header-workspace">
+                %if c.workspace:
+                    <div>
+                        % if c.workspace and not c.workspace.public:
+                        <p><strong>Teambox:</strong> <span id="workspace_name">${c.workspace.name}</span></p>
+                        <p><strong>Created:</strong> <script type="text/javascript">document.write(format_date_iso(${c.workspace.creation_date}, false));</script> </p>
+                        % endif
+                    </div>
+
+                    <div class="header-buttons-container">
+                    %if c.email_id and c.workspace and not c.workspace.public:
+                        <a class="button-download" target="_blank" href="${url('credentials_download', workspace_id=c.workspace.id, email_id=c.email_id, interactive=1)}">Desktop Access</a>
+                    %endif
+                    %if (c.notif_flag and not c.is_admin):
+                        <a class="button-download" href="${url('teambox_settings', workspace_id=c.workspace.id)}">Manage notifications</a>
+                    %endif
+                    </div>
+
+                %endif
+            </div>	
+        </div>
+        <div class="header-user">
+            <div class="header-user-name">
+                <span>Welcome <strong id="span_session_user">${c.welcome_name if c.welcome_name else 'Guest'}</strong></span>
+                <a id="logout_link" href="${c.logout_url}" class="button" style="display: none">Logout</a>
+            </div>
+            <div class="header-user-theme">
+                <label>Select theme</label>
+                <a rel="Blue" onclick="setActiveStyleSheet('Blue'); return false;" class="styleswitch theme-blue" title="Blue">Blue</a> 
+                <a rel="Black" onclick="setActiveStyleSheet('Black'); return false;" class="styleswitch theme-black" title="Black">Black</a> 
+                <a rel="Orange" onclick="setActiveStyleSheet('Orange'); return false;" class="styleswitch theme-orange" title="Orange">Orange</a> 
+            </div>
+        </div>
+    </div>
+    <hr />
+</div>

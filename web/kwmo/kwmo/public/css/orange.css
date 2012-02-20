@@ -1,0 +1,28 @@
+@charset "utf-8"; 
+@import url("common.css");
+
+#content{background-image:url(../images/graphics/theme3/bg.png);}
+
+#header{color:#f29d46;}
+	
+.button{background-image:url(../images/graphics/theme3/buttons/button.gif); color:#f19231}
+.button:hover{color:#cf6900;  text-shadow: 1px 1px 1px #fff;}
+.button.disabled, .button.disabled:hover{color: #CCC;}
+
+.main .block-header{background-image:url(../images/graphics/theme3/block/header_big.png);}
+.side .block-header{background-image:url(../images/graphics/theme3/block/header_small.png);}
+.main .block-content{background-image:url(../images/graphics/theme3/block/footer_big.png);}
+.side .block-content{background-image:url(../images/graphics/theme3/block/footer_small.png);}
+.main .block-wrapper{background-image:url(../images/graphics/theme3/block/bg_big.gif);}
+.side .block-wrapper{background-image:url(../images/graphics/theme3/block/bg_small.gif);}
+
+.block dl{border-bottom-color:#e9f7fc;}
+.block dt, .block dt a{color:#ef8213;}
+
+.message{background-image:url(../images/graphics/theme3/messages/msg_bg.gif);}
+.message p{background-image:url(../images/graphics/theme3/messages/msg_head.gif); color:#805326;}
+.message span{background-image:url(../images/graphics/theme3/messages/msg_bottom.gif);}
+
+.block.block-files dl dt small{color:#f2c346; background:#fffccd;}
+.files-path a{color:#f29d46; background:#fffccd;}
+.files-path a:hover{color:#ffffff; background:#ef8213;}

@@ -1,0 +1,75 @@
+.status {
+    background-color: #DDDDDD;
+    padding: 0.2em 1em 0.2em 1em;
+    margin: 0 1em 1.7em 1em;
+    font-size: small;
+}
+
+.invalid_config { 
+    background-color: yellow;
+    padding: 0.2em 1em 0.2em 1em;
+    margin: 0 1em 1.7em 1em;
+    font-size: small;
+    color: black;
+}
+
+.status_up {
+    display: inline;
+    color: black;
+}
+
+.status_down {
+    display: inline;
+    color: black;
+}
+
+table#kcd_org_list {
+    width: 100%;
+    padding: 0em;
+    font-size: smaller;
+}
+
+table#kcd_org_list tr {
+    margin: 0px;
+}
+
+table#kcd_org_list tr td {
+    font-weight: bold;
+    padding: 0.3em;
+    margin: 0;
+    /*border: black solid 1px;*/
+}
+
+table#kcd_org_list tr td.org_key_id_label {
+    text-align: left;
+    width: 25%;
+    font-weight: bolder;
+    padding-left: 1em;
+}
+
+table#kcd_org_list tr td.org_name_label {
+    text-align: left;
+    width: 55%;;
+    font-weight: bolder;
+}
+
+table#kcd_org_list tr td.org_key_id {
+    padding-left: 1em;
+}
+
+table#kcd_org_list tr td.action {
+    width: 20%;
+    text-align: right;
+    padding-right: 1.2em;
+}
+
+table#kcd_org_list tr td form {
+    padding: 0px;
+    margin: 0px;
+}
+
+div.no_org_yet {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+

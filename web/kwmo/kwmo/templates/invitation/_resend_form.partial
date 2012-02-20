@@ -1,0 +1,4 @@
+<form method="POST" action="${url('invite_resend_create', workspace_id=c.workspace.id)}">
+    <input type="text" name="email" />
+    <input type="submit" name="submit" value="Send me a new invitation" />
+</form>

@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Use this script if you want to develop in this local repository with your own
+# development.ini file.
+# 
+# You *must* have a development environment that is compatible with the
+# production environment, i.e. kpython and the other packages must be installed.
+
+# Add kas-web-base to the python path.
+export PYTHONPATH=`pwd`/../python/base:$PYTHONPATH
+
+# Add kas-python to the python path.
+export PYTHONPATH=`pwd`/../../python:$PYTHONPATH
+
+# Add kas-python to the python path.
+export PYTHONPATH=/usbdisk/mnt/repos/k2_kpython:$PYTHONPATH
+
+DEVELOPMENT_FILE=development.ini
+
+../python/kwmo/kwsfetcher --paster-config-file=$DEVELOPMENT_FILE 

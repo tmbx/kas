@@ -1,0 +1,8 @@
+# /etc/cron.d/anacron: crontab entries for the anacron package
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+* * * * *   root    find /var/teambox/vnc_meta/vnc_cred/ -type f -mmin +1 | xargs rm -f
+
+

@@ -1,0 +1,28 @@
+Date: %MailDate%
+Message-ID: %MailMessageID%
+From: %MailFrom%
+To: %MailTo%
+MIME-Version: 1.0
+Subject: %Subject%
+Content-Type: multipart/alternative;
+	boundary="%Boundary%"
+
+This is a multi-part message in MIME format.
+--%Boundary%
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8bit
+
+Teambox notification.
+
+--%Boundary%
+Content-Type: text/html; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8bit
+
+<html>
+<body>
+%HtmlBody%
+</body>
+</html>
+
+--%Boundary%--
+

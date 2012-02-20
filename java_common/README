@@ -1,0 +1,14 @@
+Java applets are compiled and installed in the repository because:
+
+- They are cross-platform.
+- We want to avoid needing a java jdk and signing cert on the build machine.
+
+How to update:
+- copy (temporarily) code_signing_cert.p12 to: kas/java_common, kas/test_applet, kas/vnc_applet
+- run 'make && make install && make clean' in kas/java_common to update ../web/www/applets/base/kas_common.jar
+- run 'make && make install && make clean' in kas/test_applet to update ../web/www/applets/kwmo/KWMOTester.jar
+- run 'make && make install && make clean' in kas/vnc_applet to update ../web/www/applets/kwmo/VncViewer.jar
+- commit (source and installed compiled jars only - no class file, no local jar file and most importantly no code signing cert)
+
+Note: test_applet and vnc_applet compile using the installed kas_common.jar (../web/www/applets/base/kas_common.jar)
+

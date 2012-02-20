@@ -1,0 +1,67 @@
+Source: kas
+Section: teambox-internal
+Priority: optional
+Maintainer: 
+Build-Depends: debhelper (>= 5), build-essential, scons, mercurial, libpq-dev, libktools0-dev, libgnutls-dev, libjpeg62-dev, libmhash-dev, postgresql-server-dev-8.4
+Standards-Version: 3.7.2
+
+Package: kcd
+Architecture: any
+Depends: ${shlibs:Depends}, libkcdpg, vncreflector, kmod
+Description: Teambox Collaboration Daemon
+ The KCD manages workspaces on the server-side.
+
+Package: libkcdpg
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: KCD Postgres shared library
+ This library implements Postgres functions that are used by KCD and KWMO.
+ 
+Package: ktlstunnel
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: SSL tunnel between a local host and KCD
+ This program implements a SSL tunnel between the KWM and its related processes
+ and the KCD.
+
+Package: vncreflector
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: VNC proxy used by the KCD
+ This program implements a VNC proxy used by the KCD to connect several VNC
+ clients to the same VNC server.
+ 
+Package: kas-python
+Architecture: any
+Depends: kpython
+Description: Common KAS python modules
+ This package contains the common Python modules required by the KAS.
+ 
+Package: kas-web-base
+Architecture: any
+Depends: kas-python, kweb, kpylons
+Description: Basic web components used by the KAS
+ This package contains the basic web components required by kcd-cfg, kwmo and 
+ kwmo-cfg.
+
+Package: kwmo
+Architecture: any
+Depends: kcd, kas-web-base
+Description: Online version of the Teambox Workspace Manager
+ This package contains an online version, built in AJAX, of the Teambox
+ Workspace manager.
+
+Package: freemium
+Architecture: any
+Depends: kcd, kas-web-base, python-openssl
+Description: Freemium service for self registration
+ This package contains an online web service that is consumed by KWM and a user 
+ management interface.
+
+Package: kas-cfg
+Architecture: any
+Depends: kcd, kwmo, freemium, kas-web-base
+Description: Web configuration interface for the KCD
+ This package contains the CGI scripts used to configure the KAS through a web
+ interface.
+

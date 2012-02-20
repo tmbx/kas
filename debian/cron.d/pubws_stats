@@ -1,0 +1,7 @@
+# daily pubws statistics
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+0 4 * * *   root    /usr/share/teambox/web/scripts/kwmo/pubws_stats.sh
+

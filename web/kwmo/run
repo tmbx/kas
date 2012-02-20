@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Use this script if you want to develop in this local repository with your own
+# development.ini file.
+# 
+# You *must* have a development environment that is compatible with the
+# production environment, i.e. kpython and the other packages must be installed.
+
+# Add kas-web-base to the python path.
+export PYTHONPATH=`pwd`/../python/base:$PYTHONPATH
+
+# Add kas-python to the python path.
+export PYTHONPATH=`pwd`/../../python:$PYTHONPATH
+
+# Add teambox-console-setup to the python path.
+export PYTHONPATH=`pwd`/../../../teambox-console-setup/cfg/python:$PYTHONPATH
+
+DEVELOPMENT_FILE=development.ini.stock
+if [ -f development.ini ]; then
+    DEVELOPMENT_FILE=development.ini
+fi
+
+(cd kwmo/public/applets/ && ln -fs  ../../../../www/applets/base .)
+(cd kwmo/public/css/ && ln -fs ../../../../www/css/base .)
+(cd kwmo/public/html/ && ln -fs  ../../../../www/html/base .)
+(cd kwmo/public/images/ && ln -fs  ../../../../www/images/base .)
+(cd kwmo/public/javascripts/ && ln -fs  ../../../../www/javascripts/base .)
+paster serve $DEVELOPMENT_FILE --reload
+

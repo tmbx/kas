@@ -1,0 +1,24 @@
+<div id="header">
+    <div class="wrapper">
+        <div class="teambox-logo">
+            <a href="http://www.teambox.co" target="_blank"></a>
+        </div>
+
+        <div class="header-main">
+            <div class="header-logo">
+                <h1><a href="#">Teambox Portal</a></h1>
+            </div>
+            <div class="header-workspace">
+            </div>	
+        </div>
+        <div class="header-user">
+            <div class="header-user-theme">
+                <label>Select theme</label>
+                <a rel="Blue" onclick="setActiveStyleSheet('Blue'); return false;" class="styleswitch theme-blue" title="Blue">Blue</a> 
+                <a rel="Black" onclick="setActiveStyleSheet('Black'); return false;" class="styleswitch theme-black" title="Black">Black</a> 
+                <a rel="Orange" onclick="setActiveStyleSheet('Orange'); return false;" class="styleswitch theme-orange" title="Orange">Orange</a> 
+            </div>
+        </div>
+    </div>
+    <hr />
+</div>

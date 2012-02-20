@@ -1,0 +1,79 @@
+# kwmo - Pylons development environment configuration
+# The %(here)s variable will be replaced with the parent directory of this file
+
+[DEFAULT]
+debug = true
+
+[server:main]
+use = egg:Paste#http
+host = 127.0.0.1
+port = 5000
+
+[app:main]
+use = egg:kwmo
+full_stack = true
+static_files = true
+cache_dir = %(here)s/data
+beaker.session.type = ext:database
+beaker.session.url = postgres:///kwmo?host=/var/run/postgresql/
+beaker.session.cookie_expires = False
+beaker.session.key = kwmo
+beaker.session.secret = somesecret
+set debug = true
+url_scheme = http
+
+# Fake sqlalchemy url to make shabti work (drop_sql, reset_sql, ...)
+sqlalchemy.url = postgres:///junk?host=/var/run/postgresql/
+
+[loggers]
+keys = root,routes,sqlalchemy,kwmo,kwsfetcher
+
+[handlers]
+keys = console
+
+[formatters]
+keys = generic
+
+[logger_root]
+level = WARNING
+handlers = console
+
+[logger_routes]
+level = WARNING
+handlers = console
+qualname = routes.middleware
+
+[logger_kwmo]
+level = DEBUG
+handlers = console
+qualname = kwmo
+propagate = 0
+
+[logger_kwsfetcher]
+level = DEBUG
+handlers = console
+qualname = kwsfetcher
+propagate = 0
+
+
+[logger_sqlalchemy]
+level = WARNING
+handlers = console
+qualname = sqlalchemy.engine
+
+[handler_console]
+class = StreamHandler
+args = (sys.stderr,)
+level = NOTSET
+formatter = generic
+
+[handler_rotfile]
+class = handlers.RotatingFileHandler
+args = ('/var/log/teambox/kwmo-app.log','a',10485760,10)
+level = NOTSET
+formatter = generic
+
+[formatter_generic]
+format = %(asctime)s,%(msecs)03d %(levelname)-5.5s [%(name)s] %(message)s
+datefmt = %H:%M:%S
+

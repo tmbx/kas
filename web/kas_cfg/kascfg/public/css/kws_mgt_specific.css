@@ -1,0 +1,14 @@
+.toptableleftcol { width: 400px; vertical-align: top; }
+
+#memberstattable { margin-top: 30px; }
+.memberstattablecol { vertical-align: top; }
+.fs legend { color: #444444; font-size: 1.1em; }
+#memberfs { width: 320px; }
+#statfs { width: 260px; }
+#memberstatlastcol { padding-left: 15px; }
+.statfsleftcol { text-align: right; padding-right: 15px; }
+.statfsrightcol { text-align: right; }
+.statfsrightcol input { text-align: right; font-size: 1.0em; }
+#statfslastcol td { padding-top: 20px; }
+#backdiv { text-align: center; }
+

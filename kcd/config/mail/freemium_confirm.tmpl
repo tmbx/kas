@@ -1,0 +1,31 @@
+Date: %MailDate%
+Message-ID: %MailMessageID%
+From: %MailFrom%
+To: %MailTo%
+MIME-Version: 1.0
+Subject: Teambox Account Confirmation
+Content-Type: multipart/alternative;
+	boundary="%Boundary%"
+
+This is a multi-part message in MIME format.
+--%Boundary%
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8bit
+
+--%Boundary%
+Content-Type: text/html; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8bit
+
+<html>
+<body>
+Thank you for installing Teambox!<br><br>
+Click on the link below to confirm your account:<br>
+<a href="%ConfirmLink%">%ConfirmLink%</a><br><br>
+If the confirmation link does not work, try copying and pasting the entire link into your web browser.<br><br><br>
+Thank you for choosing Teambox!<br>
+The Teambox Team.
+</body>
+</html>
+
+--%Boundary%--
+

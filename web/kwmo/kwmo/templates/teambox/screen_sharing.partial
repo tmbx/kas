@@ -1,0 +1,118 @@
+<div id="shared_app_block" class="block block-applications" style="display: none;">
+    <div class="block-header">
+        <h2>Shared Applications</h2>
+    </div>
+    <div class="block-content">  
+        <div class="block-wrapper">
+            <div id="vnc_list">
+                <%doc>
+                    <dl><dt><a href="#">Eclipse</a></dt> <dd>3 Persons are sharing this session</dd></dl>
+                    <dl><dt><a href="#">TestLab</a></dt> <dd>1 person is in this session</dd></dl>
+                    <dl><dt><a href="#">Notepad ++</a></dt> <dd>2 Persons are sharing this session</dd></dl>
+                    <dl><dt><a href="#">Paint</a></dt> <dd>4 Persons are sharing this session</dd></dl>
+                    <small> If you have difficulty joining an application sharing session please <a href="#">click here</a>.</small>
+                </%doc>
+            </div>
+            <div id="vnc_help">
+                <hr />
+                <div id="vnc_status_container">
+
+                    <%doc>
+                    <div class="app-alert error">Some error occured, please take care in the next time!</div>
+                    <div class="app-alert connected">Connected successfully</div>
+                    <div class="app-alert loading">Trying to connect, please wait</div>
+                    </%doc>
+
+                    <div id="vnc_status"></div>
+                </div>
+
+                <div class="vnc_help_toggle app-alert error vnc-help-failed">
+                    <p>Screen Sharing unavailable</p>
+                    <p>Reason: <span id="vnc_failed_reason_text"></span></p>
+                    <div id="vnc_failed">
+                        <div class="java">
+                            <p>
+                                <a target="_blank" href="http://www.java.com/getjava/">Click here</a>
+                                to install the latest java plugin or ask your network administrator.
+                            </p>
+                            <p>
+                                Note: if your computer is slow, you might want to <a href="#" onclick="vnc_retry(); return false;">try again.</a>
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div id="vnc_log_container">
+                    <div id="vnc_log" class="hide">
+                        <a class="show-hide" href="#" onClick="show_vnc_log(); return false;">Show log</a>
+                        <a class="show-show" href="#" onClick="hide_vnc_log(); return false;">Hide log</a>
+                        <div id="vnc_messages" class="show-show">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden Html-->
+<div id="vnc_app_template_container" style="display:none" >
+    <dl><dt><a href="javascript:vnc_request(var_session_id);">var_app_name</a></dt> <dd>var_vnc_user</dd></dl>
+</div>
+
+<div id="read_only_app_template_container" style="display:none" >
+    <dl><dt>var_app_name</dt> <dd>var_vnc_user</dd></dl>
+</div>
+
+<div id="no_app_template_container" style="display:none" >
+    <dl class="empty-list"><dd>No shared application.</dd></dl>
+</div>
+
+<div id="new_vnc_prompt_template_container" style="display:none">
+    <h3>var_vnc_user is sharing his screen. Would you like to join?</h3>
+    <div class="vnc_prompt">
+        <a  href='javascript:vnc_request(var_session_id); Modalbox.hide();' >Yes, join now</a>
+        <a  href='javascript:Modalbox.hide();'>Not right now</a>
+    </div>
+</div>
+
+<div id="vnc_app">
+<!-- for hidden html code - we don't want to screw the main layout -->
+</div>
+
+<textarea style="display: none" id="vnc_applet_html">
+    <applet_disabled code="VncViewer.class" archive="/applets/VncViewer.jar, /applets/base/kas_common.jar"
+      width=1 height=1 mayscript>
+        <param name="debug_level" value="9">
+        <param name="js_debug_func" value="DebugConsole.debug">
+        <param name="js_status_func" value="set_vnc_viewer_status">
+        <param name="Open New Window" value="yes">
+        <param name="Show Controls" value="no">
+        <param name="Offer Relogin" value="no">
+        <param name="Show Offline Desktop" value="no">
+        <param name="PORT" value="${c.vnc_meta_proxy_port}">
+        <param name="PASSWORD" value="">
+        <param name="teambox_mode" value="1">
+        <param name="teambox_auth" value="var_teambox_auth">
+        <param name="teambox_cert" value="${c.teambox_cert}">
+    </applet_disabled>
+</textarea>
+
+<textarea style="display: none" id="vnc_test_applet_html">
+    <applet_disabled 
+        code="com.teambox.kwmo.KWMOTester.class"
+        archive="/applets/base/kas_common.jar, /applets/KWMOTester.jar"
+        width="1"
+        height="1"
+        mayscript>
+        <param name="debug_level" value="9">
+        <param name="js_debug_func" value="DebugConsole.debug">
+        <param name="js_status_func" value="set_vnc_test_status">
+        <param name="js_server_log_func" value="vnc_server_log">
+        <param name="vnc_meta_proxy_port" value="${c.vnc_meta_proxy_port}">
+        <param name="teambox_cert" value="${c.teambox_cert}">
+    </applet_disabled>
+</textarea>

@@ -1,0 +1,85 @@
+/* standard css */
+
+h1 { font-size: 1.2em; }
+h2 { font-size: 1em; }
+
+body.not_logged {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+
+#exception_container {
+    margin-left: 10%;
+    margin-right: 10%;
+    border: 1px solid black;
+    margin-top: 3em;
+    padding: 0.3em 0.3em 0.3em 1em;
+    text-align: left;
+}
+
+#exception_notice {
+    font-weight: bolder;
+}
+
+#exception_error {
+    margin: 1em;
+    font-size: smaller;
+}
+
+#right_content {
+    margin-top: 7px;
+    margin-left: 152px;
+}
+
+#main_content {
+    width: 100%;
+    padding: 0.75em;
+}
+
+#menu_right {
+    text-align: right;
+}
+
+#menu_right .menu_item {
+    display: inline;
+    padding-left: 10px;
+}
+
+#menu_left {
+    width: 150px;
+    font-size: smaller;
+}
+
+#menu_left .menu_item {
+    color: red;
+    padding: 2px 3px 2px 8px;
+}
+
+.menu_active {
+}
+
+.menu_disabled {
+    color: grey;
+}
+
+#status { }
+
+#status td { margin: 0; padding: 5px 20px 5px 20px; }
+
+#status .ok { color: green; }
+
+#status .fail { color: red; }
+
+.back_link_container {
+    display: block;
+    width: 95%;
+    margin: 1.5em 2% 1em 2%;
+    padding: 0;
+    text-align: right;
+}
+
+.back_link {
+    font-size: 1.2em;
+}
+

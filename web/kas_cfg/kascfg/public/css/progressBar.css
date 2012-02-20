@@ -1,0 +1,70 @@
+.progressBar1{
+	width: 300px;
+	height: 18px;
+    position: relative;
+    top: 5px;
+    left: 43px;
+}
+
+.progressBar2{
+	width: 300px;
+	height: 38px;
+}
+
+.progressBar3{
+	width: 200px;
+	height: 18px;
+}
+
+.progressBar4{
+	width: 200px;
+	height: 18px;
+}
+
+.progressBar5{
+	width: 300px;
+	height: 18px;
+}
+
+.progressBar6{
+	width: 200px;
+	height: 18px;
+}
+
+.progressBar7{
+	width: 500px;
+	height: 18px;
+}
+.progressBar8{
+	width: 500px;
+	height: 18px;
+}
+.progressBar9{
+	width: 500px;
+	height: 18px;
+}
+.progressBar10{
+	width: 200px;
+	height: 38px;
+}
+#presentation{
+	position: relative;
+	width: 100%;
+}
+#panel{
+	position: relative;
+	width: 100%;
+}
+#progressbar_container{
+	position: relative;
+  	width: 100%;
+   	height: 25px;
+
+}
+#information{
+	position: relative;
+	float: left;
+	width: 100%;
+	height: 150px;
+	overflow: auto;
+}

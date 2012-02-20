@@ -1,0 +1,252 @@
+@charset "utf-8";
+/* CSS Document */
+
+/*-------------Table of Contents------------*/
+/*
+0.Table of Contents
+
+1.Master
+    1.1. Defaults
+    1.2. Layout
+    1.3. Blocks
+    
+2.Content
+    2.1. Members
+    2.2. Applications
+    2.3. Wiki
+    2.4. Messages
+    2.5. Files
+    2.6. Public workspace specific
+    2.7. Teambox Settings
+    2.8. Global errors and messages
+    2.9. Pub
+3.Other
+    3.1 Debug console
+*/
+
+/*-----------------------------------1.Master---------------------------------------*/
+/*//////////////////1.1. Defaults//////////////////*/
+*{margin:0px; padding:0px;}
+body{font-size:12px; background:#ffffff; text-align:center; cursor:default; color:#000000; margin:0px; padding:0px; font-family:Arial, Helvetica, sans-serif;}
+h1,h2,h3,h4,h5,h6,ul,ol,li,p,dl,dt,dd, form{margin:0; padding:0;}
+a, a:active, a:visited{outline:0px; cursor:pointer;}
+input, select, textarea{color:#000000; font-size:1.2em; padding:3px; font-family:Arial, Helvetica, sans-serif}
+img{border:0px; vertical-align:middle; margin:0}
+.button{text-decoration:none; font-size:1.1em; overflow:hidden; display:block; background-position:0px 0px; background-repeat:no-repeat; width:85px; height:30px; text-transform:uppercase; 
+text-align:center; line-height:2.2em; font-weight:bold; text-shadow: 1px 1px 1px #fff;}
+.button:hover{background-position:0 -30px;}
+.button.disabled:hover{background-position:0 0;cursor:default;}
+.wrapper{margin:0 auto; width:900px; text-align:left; clear:both;}
+hr{display:none;}
+acronym{cursor:help; border:0;}
+.empty{float:left; color:#999999; text-align:center; padding:20px 0; width:100%; clear:both; font-size:1.2em;}
+.loading{text-align:center; padding:0 10px; margin:5px 0;}
+/*//////////////////1.2. Layout//////////////////*/
+#container{width:100%; float:left;}
+    #header{float:left; width:100%; margin:20px 0 0 0;}
+    #header .wrapper{background:url(../images/graphics/common/logo.png) no-repeat left top; height:120px;}
+    
+    .teambox-logo{float:left; width:120px; height:100px;}
+    .teambox-logo a{height:100px; display:block; text-indent:-1000px; font-size:0em; color:#FFF;}
+    .header-main{float:left; width:400px;}
+    .header-logo{float:left; width:100%;}
+    .header-logo h1{font-size:2em; color:#b09171; margin:20px 0 10px 0}
+    .header-logo div.pubws-title { color: black; font-size: 16px; font-weight: bold; margin:22px 0 0 0; }
+    .header-logo div.pubws-subject { color: black; font-size: 20px; font-weight: bold; margin: 5px 0 0 0; }
+    /*.header-logo h1 a{color:#b09171; text-decoration:none;}*/
+    .header-workspace{clear:both; float:left; width:400px;}
+    .header-workspace p{float:left; display:inline; margin:0 40px 0 0; white-space:nowrap;}
+    .header-buttons-container {float:left; margin-bottom:5px;clear:both;}
+    
+    .button-download{background:url(../images/graphics/common/download.gif) no-repeat; width:147px; height:20px; padding:5px 0 0 0;  margin:10px 0 0 0; display:inline; 
+    color:#666; text-align:center; text-decoration:none; float:left; font-weight:bold;}
+    .button-download:hover{background:url(../images/graphics/common/download.gif) no-repeat 0px -25px; }
+    
+    .header-user{float:right; width:350px; margin:20px 0 0 0;}
+    .header-user .button{font-size:0.8em;}
+    .header-user-name{float:right; width:100%; font-size:1.3em}
+    .header-user-name span{float:left; padding:5px 10px 0 0;}
+    .header-user-name .button{float:left;}
+    .header-user-theme{float:right; width:100%; color:#cccccc; margin:5px 0 0 0;}
+    .header-user-theme label{float:left; width:80px; font-size:0.9em; font-weight:bold; padding:1px 0;}
+    .header-user-theme a{float:left; border:1px solid #CCCCCC; text-indent:-1000px; font-size:0em; height:10px; width:10px; display:inline; margin:2px;}
+    .header-user-theme a:hover{border-color:#000000;}
+    .header-user-theme a.selected{border-width:2px; height:8px; width:8px;}
+    .theme-blue{background-color:#769ca7;}
+    .theme-black{background-color:#333333;}
+    .theme-orange{background-color:#f29d46;}        
+    
+#content{float:left; width:100%; padding:20px 0; background-repeat:repeat-x;min-height:400px}
+    .main{float:left; width:590px;}
+    .side{float:right; width:290px;}
+
+#footer{background:#f1f1f1; float:left; width:100%; height:50px; padding:20px 0; font-size:1.1em;}
+.footer-copy{float:left; color:#5a5a5a; width:400px; font-weight:bold;}
+.footer-links{float:right; width:300px; text-align:right; color:#CCCCCC}
+.footer-links a{color:#5a5a5a;}
+.footer-links a:hover{text-decoration:none;}
+
+/*//////////////////1.3. Blocks//////////////////*/
+.block{float:left; width:100%; margin:0 0 20px 0; overflow:hidden;}
+    .block-header{height:37px; float:left; width:100%; background-repeat:no-repeat;}
+    .block-content{float:left; width:100%; background-repeat:no-repeat; background-position:0px bottom; padding:0 0 17px 0;}
+    .block-wrapper{float:left; width:100%; background-repeat:repeat-y;}
+    .block h2{height:37px; font-size:1.6em; color:#FFFFFF; margin:7px 0 0 20px;}
+
+.block dl{float:left; border-bottom:1px solid #f1f1f1; padding:5px 0; margin:0 15px; display:inline;}
+.main .block dl{width:540px;}
+.side .block dl{width:260px;}
+.block dt{float:left; width:100%; font-size:1.4em; font-weight:bold; margin:2px 0;}
+.block dt a:hover{text-decoration:none;}
+.block dd{float:left; width:100%; font-size:0.9em; color:#999999;}
+.block dd a{color:#999999;}
+.block dd a:hover{text-decoration:none;}
+.main .block dd{font-size:1.1em; margin-top:3px;}
+.empty-list dd{padding-top:18px; padding-bottom:2px}
+
+.main .block-new{float:left; width:570px; margin:10px 0 0 0; display:inline; clear:both;}
+.block-new .button{float:right;}
+
+/*-----------------------------------2.Content---------------------------------------*/
+
+/*//////////////////2.1. Members//////////////////*/
+.block.block-members dl{background:url(../images/graphics/common/icons/member.gif) no-repeat left 14px; padding-left:30px; width:215px;}
+.members-list{width:280px;overflow-x:hidden; overflow:auto; max-height:345px;}
+.block.block-members .banned { display: none; }
+
+/*//////////////////2.2. Applications//////////////////*/
+.block.block-applications dl{background:url(../images/graphics/common/icons/application.gif) no-repeat left 10px; padding-left:40px; width:220px;}
+    .block.block-applications small{float:left; clear:both; font-size:0.8em; padding:10px; color:#CCCCCC; width:270px;}
+    .block.block-applications small a{color:#CCCCCC;}
+
+.app-alert{margin:10px 15px; padding:10px 45px 10px 10px; font-size:0.9em; float:left; width:205px; text-align:left;}
+.app-alert.error{color:#C30; border:1px solid #C30; background:url(../images/graphics/common/icons/error.png) no-repeat 230px 5px #FCC;}
+.app-alert.loading{color:#F60; border:1px solid #F90; background:url(../images/graphics/common/icons/loading.gif) no-repeat 240px 8px #FFF9E6;}
+.app-alert.connected{color:#060; border:1px solid #060; background:url(../images/graphics/common/icons/done.png) no-repeat 230px 5px #D2FFB7;}
+
+#vnc_help .vnc-help-failed { display: none; }
+#vnc_help.failed .vnc-help-failed { display: block; }
+
+#vnc_failed .java { display: none; }
+#vnc_failed.java .java { display: block; }
+#vnc_log_container { margin:0px 5px; padding:0px 45px 10px 10px; font-size:0.9em ; float:left; width:205px; text-align:left; display: none; }
+#vnc_log_container a{color:#999999}
+#vnc_help.pending #vnc_log_container, #vnc_help.failed #vnc_log_container { display: block; }
+#vnc_log * { display: none; }
+#vnc_log.show .show-show, #vnc_log.hide .show-hide { display: block; }
+#vnc_log.show .show-show *, #vnc_log.hide .show-hide * { display: block; }
+
+.vnc_prompt {font-size:1.2em; margin-top: 10px; margin-left:180px}
+.vnc_prompt a {color:#999999; margin-bottom:10px; display:block;}
+.vnc_prompt a:hover{text-decoration:none;}
+
+/*//////////////////2.3. Wiki//////////////////*/
+.wiki-list{overflow:auto; height:160px; float:left; width:580px; display:inline; margin:20px 0 0 0; overflow-x:hidden;}
+    .block.block-wiki dl{background:url(../images/graphics/common/icons/wiki.gif) no-repeat left 10px; padding-left:40px; width:490px; overflow:hidden}
+
+/*//////////////////2.4. Messages//////////////////*/
+.messages-list{overflow:auto; height:370px; float:left; width:580px; margin:20px 0 0 0; display:inline;}
+    .message{float:left; background:repeat-y; width:535px; margin:0 0 15px 20px; display:inline;}
+    .message p{background-repeat:no-repeat; background-position:left top; font-size:1.2em; padding:20px 20px 0 60px; min-height:23px}
+    .message span{display:block; background-position:left top; background-color:#FFFFFF; 
+    background-repeat:no-repeat; font-size:0.9em; color:#666666; padding:20px 0 0 50px;}
+.message-new{background:url(../images/graphics/common/msg_add.gif) no-repeat; height:55px; float:left; width:515px; margin:15px 0 10px 40px;
+clear:both; display:inline;}
+    .message-new input{border:0px; font-size:1.4em; color:#333333; height:20px; float:left; margin:14px 0 0 15px; display:inline; width:400px;}
+    .message-new .button{float:left; margin:13px 0 0 0;}
+
+/*//////////////////2.5. Files//////////////////*/
+.files-path{margin:10px; padding:5px; border:1px solid #f1f1f1; font-size:1.1em; font-weight:bold; color:#CCCCCC}
+    .files-path a{color:#666666; background:#f1f1f1; padding:2px; text-decoration:none;}
+    .files-path a:hover{color:#666666; background:#CCCCCC;}
+.files-list{overflow:auto; height:200px; float:left; width:580px; display:inline; overflow-x:hidden;}
+    .block.block-files dl{ padding-left:40px; width:490px; font-size:0.9em;}
+    .block.block-files dl.file{background:url(../images/graphics/common/icons/file.gif) no-repeat left 10px;}
+    .block.block-files dl.dir{background:url(../images/graphics/common/icons/folder.gif) no-repeat left 3px;}
+    .block.block-files dl dt small{font-size:0.7em; padding:2px; color:#999999}
+.file_upload_form{padding-left:15px;}
+.file-update { float: right; }
+.file-update.disabled { color: gray; }
+.file_upload_pending{margin:20px 20px 0px; padding:10px 45px 10px 10px; font-size:0.9em; float:left; width:485px; height:10px; text-align:left;
+color:#F60; border:1px solid #F90; background:url(../images/graphics/common/icons/loading.gif) no-repeat 510px 8px #FFF9E6;
+}
+
+
+/*/////////////    2.6. Public workspace specific     /////////////*/
+.action_links {color:#547684; padding-bottom:20px;}
+.action_links a{color:#547684; font-size:12px;}
+.action_links ul{padding-left:17px; margin: 0; list-style-type: none}
+.action_links li{padding-top:10px; margin: 0; list-style-type: none}
+
+.block.block-email-info{}
+.block.block-email-info dt{font-size:1.1em;}
+.block.block-email-info dt span{font-size:1em;color:#999999;}
+.block.block-email-info dd{margin-left:10px;}
+
+.email_information p{color:#547684; padding: 3px 0px 0px 17px}
+
+.email_information .file_list{ padding-left: 10px; margin-bottom: 5px;}
+#attachment_info { padding: 0.8em; font-size: 120%; }
+#attachment_list .attachment-file{ background:transparent url(../images/graphics/common/icons/attach17.gif) no-repeat scroll left 10px;
+                                   border-bottom:1px solid #F1F1F1; margin-left:15px;padding-bottom:10px;padding-left:40px;padding-top:15px; width:500px;}
+#attachment_list .attachment-file {color: #999999;}
+#attachment_list .attachment-file a{color: #999999;}
+#attachment_list .attachment-file small{color: #000000;}
+#attachment_list .attachment-file a:hover {text-decoration:none;}
+#attachments_chat { font-size: 120%; margin: 1.2em 0 0.2em 0; }
+dd.identity a{color:#000000;}
+dd .attachment-file small{color: #000000;}
+#chat_link a, #chat_nolink {
+    background-image: url(../images/graphics/common/icons/comments.png);
+    background-repeat: no-repeat;
+    padding: 3px 0 3px 20px;
+}
+#send_file_link a, #send_file_nolink {
+    background-image: url(../images/graphics/common/icons/folder_page_white.png);
+    background-repeat: no-repeat;
+    padding: 3px 0 3px 20px;
+}
+#wscreate_link a, #wscreate_nolink {
+    background-image: url(../images/graphics/common/icons/teambox-16x16.png); 
+    background-repeat: no-repeat;
+    padding: 3px 0 3px 20px;
+}
+#att_chat_link a, #att_chat_nolink {
+    background-image: url(../images/graphics/common/icons/comments.png);
+    background-repeat: no-repeat;
+    margin-left: 1.2em;
+    padding-left: 20px;
+}
+#att_chat_link a { color:#547684; }
+
+/*//////////      2.7. Teambox Settings     ///////////*/
+.settings {}
+form.settings{margin-top:20px;}
+.settings legend{margin-left:15px;}
+.settings fieldset{margin:20px; width:320px;}
+.settings .button{float:left; margin-right:15px; margin-top:50px;}
+.settings div{padding:10px;}
+
+
+/*//////////      2.8. Global errors and messages     ///////////*/
+
+.glob_message { display: block; width: 568px; margin: 0 0 1em 2px; padding: 0.7em; }
+.glob_message.info { color:#060; border:1px solid #060; background-color: #D2FFB7; }
+.glob_message.warn { color:#F60; border:1px solid #F90; background-color: #FFF9E6; }
+.glob_message.error { color:#C30; border:1px solid #C30; background-color: #FCC; }
+
+/*//////////      2.9. Pub      ///////////*/
+#pub { padding: 12px 12px 4px 12px; font-size: 14px; font-weight: normal; }
+
+/*-----------------------------------3. Other---------------------------------------*/
+
+/*/////////////    3.1. Debug console     /////////////*/
+.dc-console { border: 1px solid black; text-align: left; background-color: #eeeeee; }
+.dc-menu { }
+.dc-menu a { padding-left: 0.3em; padding-right: 0.3em; }
+.dc-menu a.dc-menu-close {  }
+.dc-content { height: 280px; overflow: auto; }
+.dc-msg-row span { display: inline-block; padding-left: 0.3em; padding-right: 0.5em; }
+.dc-msg-namespace { display: inline-block; width: 7em; overflow: hidden; }
+.dc-msg-message { display: inline-block; width: 800px; }
+

@@ -1,0 +1,141 @@
+# Auto-generated dump of kwmo models by model_dump.py
+CREATE TABLE workspace (
+	id BIGINT NOT NULL, 
+	name TEXT, 
+	creation_date BIGINT, 
+	compat_v2 BOOLEAN, 
+	secured BOOLEAN, 
+	public BOOLEAN, 
+	deleted BOOLEAN, 
+	frozen BOOLEAN, 
+	deep_frozen BOOLEAN, 
+	last_perm_check_id BIGINT, 
+	last_event_id BIGINT, 
+	evt_ws_id BIGINT, 
+	evt_user_id BIGINT, 
+	evt_kfs_id BIGINT, 
+	evt_chat_id BIGINT, 
+	evt_vnc_id BIGINT, 
+	evt_skurl_id BIGINT, 
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE kfsnode (
+	inode_id BIGINT NOT NULL, 
+	share_id INTEGER NOT NULL, 
+	workspace_id BIGINT NOT NULL, 
+	user_id INTEGER, 
+	commit_id BIGINT, 
+	inode_type INTEGER, 
+	name TEXT, 
+	status INTEGER, 
+	cdate BIGINT, 
+	mdate BIGINT, 
+	file_size BIGINT, 
+	file_hash BYTEA, 
+	parent_inode_id BIGINT, 
+	parent_share_id INTEGER, 
+	parent_workspace_id BIGINT, 
+	PRIMARY KEY (inode_id, share_id, workspace_id), 
+	 CONSTRAINT kfsnode_workspace_id_fk FOREIGN KEY(workspace_id) REFERENCES workspace (id), 
+	 CONSTRAINT kfsnode_parent_inode_id_parent_share_id_parent_workspace_id_fk FOREIGN KEY(parent_inode_id, parent_share_id, parent_workspace_id) REFERENCES kfsnode (inode_id, share_id, workspace_id)
+);
+
+CREATE INDEX ix_kfsnode_parent_workspace_id ON kfsnode (parent_workspace_id);
+
+CREATE INDEX ix_kfsnode_parent_inode_id ON kfsnode (parent_inode_id);
+
+CREATE INDEX ix_kfsnode_parent_share_id ON kfsnode (parent_share_id);
+
+CREATE INDEX ix_kfsnode_workspace_id ON kfsnode (workspace_id);
+
+CREATE TABLE "user" (
+	id INTEGER NOT NULL, 
+	workspace_id BIGINT NOT NULL, 
+	real_name TEXT, 
+	admin_name TEXT, 
+	email TEXT, 
+	evt_id BIGINT, 
+	root BOOLEAN, 
+	admin BOOLEAN, 
+	manager BOOLEAN, 
+	out BOOLEAN, 
+	locked BOOLEAN, 
+	banned BOOLEAN, 
+	PRIMARY KEY (id, workspace_id), 
+	 CONSTRAINT user_workspace_id_fk FOREIGN KEY(workspace_id) REFERENCES workspace (id)
+);
+
+CREATE INDEX ix_user_workspace_id ON "user" (workspace_id);
+
+CREATE TABLE wsrequest (
+	workspace_id BIGINT NOT NULL, 
+	request_id BIGINT NOT NULL, 
+	req_date BIGINT, 
+	user_id INTEGER, 
+	subject TEXT, 
+	PRIMARY KEY (workspace_id, request_id), 
+	 CONSTRAINT wsrequest_workspace_id_fk FOREIGN KEY(workspace_id) REFERENCES workspace (id), 
+	 FOREIGN KEY(user_id, workspace_id) REFERENCES "user" (id, workspace_id)
+);
+
+CREATE INDEX ix_wsrequest_workspace_id ON wsrequest (workspace_id);
+
+CREATE TABLE chatrequest (
+	workspace_id BIGINT NOT NULL, 
+	request_id BIGINT NOT NULL, 
+	req_date BIGINT, 
+	user_id INTEGER, 
+	timeout INTEGER, 
+	accepted BOOLEAN, 
+	accepted_date BIGINT, 
+	channel_id INTEGER, 
+	PRIMARY KEY (workspace_id, request_id), 
+	 CONSTRAINT chatrequest_workspace_id_fk FOREIGN KEY(workspace_id) REFERENCES workspace (id), 
+	 FOREIGN KEY(user_id, workspace_id) REFERENCES "user" (id, workspace_id)
+);
+
+CREATE INDEX ix_chatrequest_workspace_id ON chatrequest (workspace_id);
+
+CREATE TABLE chatmessage (
+	workspace_id BIGINT NOT NULL, 
+	evt_id BIGINT NOT NULL, 
+	date BIGINT, 
+	channel_id INTEGER, 
+	user_id INTEGER, 
+	msg TEXT, 
+	PRIMARY KEY (workspace_id, evt_id), 
+	 FOREIGN KEY(user_id, workspace_id) REFERENCES "user" (id, workspace_id), 
+	 CONSTRAINT chatmessage_workspace_id_fk FOREIGN KEY(workspace_id) REFERENCES workspace (id)
+);
+
+CREATE INDEX ix_chatmessage_workspace_id ON chatmessage (workspace_id);
+
+CREATE TABLE vncsession (
+	workspace_id BIGINT NOT NULL, 
+	session_id BIGINT NOT NULL, 
+	date BIGINT, 
+	user_id INTEGER, 
+	subject TEXT, 
+	port INTEGER, 
+	PRIMARY KEY (workspace_id, session_id), 
+	 FOREIGN KEY(user_id, workspace_id) REFERENCES "user" (id, workspace_id), 
+	 CONSTRAINT vncsession_workspace_id_fk FOREIGN KEY(workspace_id) REFERENCES workspace (id)
+);
+
+CREATE INDEX ix_vncsession_workspace_id ON vncsession (workspace_id);
+
+CREATE TABLE kfsuploadstatus (
+	client_random_id INTEGER NOT NULL, 
+	share_id INTEGER NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	workspace_id BIGINT NOT NULL, 
+	status INTEGER, 
+	failure_reason INTEGER, 
+	created TIMESTAMP WITHOUT TIME ZONE, 
+	uploaded_size BIGINT, 
+	name TEXT, 
+	PRIMARY KEY (client_random_id, share_id, user_id, workspace_id)
+);
+
+# End of auto-generated dump

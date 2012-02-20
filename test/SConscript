@@ -1,0 +1,20 @@
+import os
+Import('env')
+
+FILES = ['test.c',
+         'anp.c',
+        ]
+
+print FILES
+
+FILES.append(env.ExtractTests(source = FILES, target = "unit_test.c"))
+
+OBJS = []
+for s in FILES:
+    OBJS.append(env.Object(s))
+
+OBJS.append(os.path.join(os.getcwd(), '../../build/kcdcommon/anp.o')),
+
+PROGS = [env.Program(target = 'test', source = OBJS, LINKFLAGS='-rdynamic -ldl -lpthread -lktools')]
+
+Return('OBJS PROGS')

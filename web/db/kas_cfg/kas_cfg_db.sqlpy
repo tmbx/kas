@@ -1,0 +1,39 @@
+# Create database if not existing.
+<<< isset(drop), isdb(kas_cfg), print(Dropping database kas_cfg.), dropdb(kas_cfg) >>>
+
+# Exit if we don't need to create database.
+<<< isnotset(create), exit() >>>
+
+# Create database if needed.
+<<< isnodb(kas_cfg), print(Creating database kas_cfg.), createdb(kas_cfg) >>>
+
+# Exit if we don't need to create the schema.
+<<< isset(noschema), exit() >>>
+
+# Connect to the database.
+<<< connect(kas_cfg) >>>
+
+# Create the kas_cfg_session table if required.
+<<< isnotable(kas_cfg_session), print(Creating kas_cfg_session table.) >>>
+
+-- Session table.
+CREATE SEQUENCE kas_cfg_session_id_seq;
+CREATE TABLE kas_cfg_session (
+
+    -- Session ID.
+    id integer PRIMARY KEY NOT NULL default nextval('kas_cfg_session_id_seq'::regclass),
+
+    -- Session namespace.
+    namespace VARCHAR(255) NOT NULL,
+
+    -- Session access timestamp.
+    accessed TIMESTAMP NOT NULL,
+
+    -- Session creation timestamp.
+    created TIMESTAMP NOT NULL,
+
+    -- Data.
+    data BYTEA NOT NULL
+);
+CREATE UNIQUE INDEX kas_cfg_session_namespace_key ON kas_cfg_session USING btree (namespace);
+

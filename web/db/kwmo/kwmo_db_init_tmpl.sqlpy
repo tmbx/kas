@@ -1,0 +1,31 @@
+# Drop the database if required.
+<<< isset(drop), isdb(kwmo), print(Dropping database KWMO.), dropdb(kwmo) >>>
+
+# Exit if we don't need to create database.
+<<< isnotset(create), exit() >>>
+
+# Create database if needed.
+<<< isnodb(kwmo), print(Creating database kwmo.), createdb(kwmo) >>>
+
+# Exit if we don't need to create the schema.
+<<< isset(noschema), exit() >>>
+
+# Connect to the database.
+<<< connect(kwmo) >>>
+
+# Create fixes table and insert fixes that must be ignored.
+<<< isnotable(kwmo_fix_table), print(Creating fixes table in kwmo database.) >>>
+
+CREATE TABLE kwmo_fix_table (
+
+    -- Name of the applied fix.
+    name varchar PRIMARY KEY
+);
+
+INSERT INTO kwmo_fix_table (name) VALUES ('invitation_rework');
+INSERT INTO kwmo_fix_table (name) VALUES ('update-1.8');
+INSERT INTO kwmo_fix_table (name) VALUES ('update-1.9');
+
+# Create model tables.
+<<< isnotable(workspace), print(Creating model tables in kwmo database.) >>>
+

@@ -1,0 +1,522 @@
+# The following logical locks are defined:
+# - kws_list:
+#   - Write lock to create a workspace, delete a workspace or invite users.
+# - kws:
+#   - Read lock to lock the workspace in place or to change some application-
+#     specific data.
+#   - Write lock to change other workspace data.
+# - kfs:
+#   - Read lock to read the KFS files.
+#   - Write lock to update KFS data, including the current file size and file
+#     quota.
+# - event_log:
+#   - Write lock to post in the event and notification logs of a workspace.
+#
+# The locking order is the one specified above, sorted by the workspace ID when
+# applicable.
+#
+#
+# The following logical sequences are defined:
+# - kws_list: next workspace ID.
+# - user: next user ID in a workspace.
+# - event_log: next event ID of a workspace.
+# - notif_log: next notification ID of a workspace.
+# - kfs_commit: next KFS commit ID of a workspace.
+# - kfs_inode: next KFS inode ID of a workspace.
+# - vnc_session: next VNC session ID of workspace.
+# 
+# The access to the sequences must be serialized with locks.
+#
+#
+# The following relations can be listened to. The string 'XXX' must be replaced
+# by the workspace ID.
+# - kws_list:
+#   - Notified when a workspace is created.
+# - kws_XXX_event_log:
+#   - Notified when an event or a notification is posted.
+# - kws_XXX_perm_check:
+#   - Notified when the permissions associated to the workspace or its users
+#     have been modified.
+
+
+# Drop the database if required.
+<<< isset(drop), isdb(kcd), print(Dropping database KCD.), dropdb(kcd) >>>
+
+# Exit if we don't need to create the database.
+<<< isnotset(create), exit() >>>
+
+# Create the database if required.
+<<< isnodb(kcd), print(Creating database KCD.), createdb(kcd) >>>
+
+# Exit if we don't need to create the schema.
+<<< isset(noschema), exit() >>>
+
+# Connect to the database.
+<<< connect(kcd) >>>
+
+# Create the plpgsql language if required.
+<<< isnolang(plpgsql), print(Creating language plpgsql.) >>>
+CREATE LANGUAGE plpgsql;
+
+# Create the KCD fix table if required.
+<<< isnotable(kcd_fix_table), print(Creating KCD fix table.) >>>
+
+-- Applied fixes table.
+CREATE TABLE kcd_fix_table (
+
+    -- Name of the applied fix.
+    name varchar PRIMARY KEY
+);
+
+# Create the KCD tables if required
+<<< isnotable(kcd_kws_list), isnotable(kws_list), print(Creating KCD tables.) >>>
+
+-- Lock table.
+CREATE TABLE kcd_locks (
+    
+    -- Workspace ID, or 0 if not applicable.
+    kws_id bigint,
+    
+    -- Name of the lock being acquired.
+    name varchar,
+    
+    PRIMARY KEY (kws_id, name)
+);
+
+-- Sequence table.
+CREATE TABLE kcd_sequences (
+    
+    -- Workspace ID, or 0 if not applicable.
+    kws_id bigint,
+    
+    -- Name of the sequence being used.
+    name varchar,
+    
+    -- Current value of the sequence. When a new sequence ID is requested, 
+    -- this value is incremented first and then returned.
+    value bigint,
+    
+    PRIMARY KEY (kws_id, name)
+);
+
+-- Global user table.
+CREATE TABLE kcd_global_users (
+    
+    -- User email address.
+    email varchar,
+    
+    -- Default email notification policy for new workspaces.
+    notif_policy int,
+    
+    -- License associated to the user.
+    license varchar,
+    
+    PRIMARY KEY (email)
+);
+
+-- KCD ticket table.
+CREATE TABLE kcd_ticket (
+
+    -- Ticket.
+    ticket bytea PRIMARY KEY,
+    
+    -- Creation date, in seconds since UNIX epoch.
+    creation_date bigint
+);
+
+
+-- Workspace list table.
+CREATE TABLE kcd_kws_list (
+    
+    -- Unique ID of the workspace.
+    kws_id bigint PRIMARY KEY,
+    
+    -- Creation date, in seconds since UNIX epoch.
+    creation_date bigint,
+    
+    -- Workspace name.
+    name varchar,
+    
+    -- Flags of the workspace.
+    flags int
+);
+
+-- Workspace event log table.
+CREATE TABLE kcd_kws_event_log (
+
+    -- Workspace ID.
+    kws_id bigint,
+
+    -- Event ID.
+    evt_id bigint,
+    
+    -- Major and minor number.
+    major int,
+    minor int,
+    
+    -- Event type.
+    type int,
+    
+    -- Event payload.
+    event bytea,
+    
+    PRIMARY KEY (kws_id, evt_id)
+);
+
+-- Notification log.
+CREATE TABLE kcd_kws_notif_log (
+
+    -- Workspace ID.
+    kws_id bigint,
+
+    -- Notification ID.
+    notif_id bigint,
+    
+    -- Event ID associated to the notification, or 0 if none.
+    evt_id bigint,
+    
+    -- Date at which the notification was generated (seconds since UNIX epoch).
+    date bigint,
+    
+    -- ID of the user who triggered the notification. This is 0 if the system
+    -- or admin sent it.
+    user_id int,
+    
+    -- Notification type. Currently this corresponds to the event type.
+    type int,
+    
+    -- Notification payload.
+    payload bytea,
+    
+    PRIMARY KEY (kws_id, notif_id)
+);
+
+-- Workspace trusted key table.
+CREATE TABLE kcd_kws_trusted_key (
+    
+    -- Workspace ID.
+    kws_id bigint,
+    
+    -- Trusted key ID.
+    key_id bigint,
+    
+    PRIMARY KEY (kws_id, key_id)
+);
+
+-- Workspace user table.
+CREATE TABLE kcd_kws_users (
+    
+    -- Workspace ID.
+    kws_id bigint,
+    
+    -- User ID.
+    user_id int,
+    
+    -- Flags of the user.
+    flags int,
+    
+    -- Workspace email notification flags.
+    notif_policy int,
+    
+    -- User email address.
+    email varchar,
+    
+    -- Name given to the user by the administrator.
+    name_admin varchar,
+    
+    -- Name given by the user himself.
+    name_user varchar,
+    
+    -- Organization name.
+    org_name varchar,
+    
+    -- Password associated to the user.
+    pwd varchar,
+    
+    PRIMARY KEY (kws_id, user_id)
+);
+
+-- Workspace user invitation table.
+CREATE TABLE kcd_kws_user_invitation (
+    
+    -- Invitation email ID.
+    email_id varchar,
+    
+    -- Workspace ID.
+    kws_id bigint,
+    
+    -- ID of the user who sent the invitation. This is 0 if the system or admin
+    -- sent it.
+    inviting_user_id int,
+    
+    -- ID of the invited user.
+    user_id int,
+    
+    -- Date at which the invitation was generated (seconds since UNIX epoch).
+    date bigint,
+    
+    -- Key ID used for the invitation, or 0 if none.
+    key_id bigint,
+    
+    -- Password used for the invitation, or "" if none.
+    pwd varchar,
+    
+    PRIMARY KEY (email_id)
+);
+
+-- Workspace accepted user login ticket table.
+CREATE TABLE kcd_kws_login_ticket (
+
+    -- Workspace ID.
+    kws_id bigint,
+    
+    -- User ID.
+    user_id int,
+
+    -- Login ticket.
+    ticket bytea,
+    
+    PRIMARY KEY (kws_id, user_id, ticket)
+);
+
+-- KFS upload table.
+CREATE TABLE kcd_kws_kfs_upload (
+    
+    -- Uploader workspace ID.
+    kws_id bigint,
+    
+    -- Uploader share ID.
+    share_id int,
+    
+    -- Uploader user ID.
+    user_id int,
+    
+    -- Uploader commit ID.
+    commit_id bigint,
+    
+    -- Date at which this entry was last refreshed (seconds since UNIX epoch).
+    timestamp bigint,
+    
+    PRIMARY KEY (kws_id, share_id, commit_id)
+);
+
+-- KFS download tracking table.
+CREATE TABLE kcd_kws_kfs_download (
+
+    -- Workspace ID.
+    kws_id bigint,
+
+    -- Share ID.
+    share_id int,
+
+    -- Inode of the file.
+    inode bigint,
+
+    -- Commit ID of the file.
+    commit_id bigint,
+    
+    -- ID of the user who downloaded the file.
+    user_id int,
+
+    PRIMARY KEY(kws_id, share_id, inode, commit_id, user_id)
+);
+
+-- KFS limits table.
+CREATE TABLE kcd_kws_kfs_limit (
+    
+    -- Workspace ID.
+    kws_id bigint PRIMARY KEY,
+    
+    -- Quota of the workspace files, in bytes.
+    file_quota bigint,
+    
+    -- Size of the workspace files, in bytes.
+    file_size bigint
+);
+
+-- KFS current file and directory view table.
+CREATE TABLE kcd_kws_kfs_current_view (
+    
+    -- Workspace ID.
+    kws_id bigint,
+
+    -- Share ID.
+    share_id int,
+
+    -- Inode associated to this entry.
+    inode bigint,
+
+    -- Parent inode of this entry.
+    parent_inode bigint,
+
+    -- Last commit ID associated to this entry.
+    commit_id bigint,
+
+    -- Entry type (file or directory).
+    inode_type int,
+
+    -- Entry name in the parent's inode directory.
+    entry_name varchar,
+    
+    -- Email ID. This is used when the file is an attachment in a public
+    -- workspace.
+    email_id bigint,
+    
+    PRIMARY KEY (kws_id, share_id, inode)
+);
+
+-- KFS file map table.
+CREATE TABLE kcd_kws_kfs_file_map (
+
+    -- Workspace ID.
+    kws_id bigint,
+    
+    -- Share ID.
+    share_id int,
+
+    -- Inode of the file.
+    inode bigint,
+
+    -- Commit ID of the file.
+    commit_id bigint,
+
+    -- Size of the file.
+    size bigint,
+
+    -- Permanent path to the file on the storage filesystem.
+    path varchar,
+    
+    PRIMARY KEY (kws_id, share_id, inode, commit_id)
+);
+ 
+-- VNC session table.
+CREATE TABLE kcd_kws_vnc_session (
+    
+    -- Workspace ID.
+    kws_id bigint,
+
+    -- VNC session ID.
+    session_id bigint,
+
+    -- VNC proxy port.
+    port int,
+    
+    -- Date at which the session was started.
+    date bigint,
+    
+    PRIMARY KEY (kws_id, session_id)
+);
+
+-- SKURL email information table.
+CREATE TABLE kcd_kws_pub_email_info (
+
+    -- Workspace ID.
+    kws_id bigint,
+
+    -- Email ID.
+    email_id bigint,
+
+    -- Subject of the email.
+    subject varchar,
+
+    -- Date and time at which the mail was sent.
+    date bigint,
+    
+    -- Date and time at which the attachments will expire.
+    att_expire_date bigint,
+    
+    -- True if the attachments have expired.
+    att_expire_flag int,
+
+    -- Sender information.
+    name varchar,
+    address varchar,
+    
+    -- Number of attachments sent along.
+    nb_attachment int,
+
+    PRIMARY KEY(kws_id, email_id)
+);
+
+-- SKURL email recipient information table.
+CREATE TABLE kcd_kws_pub_email_recipient_info (
+    
+    -- Workspace ID.
+    kws_id bigint,
+
+    -- Email ID.
+    email_id bigint,
+
+    -- Recipient information.
+    name varchar,
+    address varchar,
+    
+    PRIMARY KEY(kws_id, email_id, address)
+);
+
+-- Create table indexes.
+CREATE INDEX kcd_kws_users_index1 ON kcd_kws_users (lower(email));
+CREATE INDEX kcd_kws_user_invitation_index1 ON kcd_kws_user_invitation (kws_id, user_id);
+CREATE INDEX kcd_kws_kfs_current_view_index1 ON kcd_kws_kfs_current_view (kws_id, share_id, parent_inode);
+CREATE INDEX kcd_kws_pub_email_info1 ON kcd_kws_pub_email_info (att_expire_flag, att_expire_date);
+
+-- Create the global locks.
+INSERT INTO kcd_locks (kws_id, name) VALUES (0, 'kws_list');
+
+-- Create the global sequences.
+INSERT INTO kcd_sequences (kws_id, name, value) VALUES (0, 'kws_list', 0);
+
+-- Insert the applied fixes.
+INSERT INTO kcd_fix_table (name) VALUES ('kfs_utf8_path');
+INSERT INTO kcd_fix_table (name) VALUES ('invitation_rework');
+INSERT INTO kcd_fix_table (name) VALUES ('update-1.8');
+INSERT INTO kcd_fix_table (name) VALUES ('update-1.9');
+INSERT INTO kcd_fix_table (name) VALUES ('update-1.10');
+INSERT INTO kcd_fix_table (name) VALUES ('update-2.1');
+
+-- Define function to consume a ticket in the KCD ticket table.
+-- The function returns 1 if the ticket was found, 0 otherwise.
+-- The ticket is deleted if it was found.
+CREATE OR REPLACE FUNCTION consume_kcd_ticket(bytea) RETURNS int AS '
+declare
+        o  alias for $1;
+begin
+    	PERFORM * FROM kcd_ticket WHERE ticket = o;
+    
+        if found then
+                DELETE FROM kcd_ticket WHERE TICKET = o;
+		RETURN 1;
+        end if;
+	
+        return 0;
+end' LANGUAGE plpgsql;
+
+-- Define the entry points to libkcdpg.
+CREATE OR REPLACE FUNCTION cmd_mgt_create_kws(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_cmd_mgt_create_kws' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION cmd_mgt_connect_kws(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_cmd_mgt_connect_kws' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION register_kws_user(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_register_kws_user' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION store_kws_user_ticket(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_store_kws_user_ticket' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION cmd_mgt_invite_kws(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_cmd_mgt_invite_kws' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION delete_kws(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_delete_kws' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION cmd_chat_msg(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_cmd_chat_msg' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION cmd_kws_get_uurl(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_cmd_kws_get_uurl' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION pb_request_workspace(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_pb_request_workspace' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION pb_request_chat(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_pb_request_chat' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION cmd_pb_accept_chat(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_cmd_pb_accept_chat' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION upload_phase_one(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_upload_phase_one' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION upload_phase_two(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_upload_phase_two' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION refresh_upload(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_refresh_upload' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION purge_upload(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_purge_upload' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION purge_att(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_purge_att' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION download_file(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_download_file' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION notify_file_download(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_notify_file_download' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION start_vnc(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_start_vnc' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION end_vnc(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_end_vnc' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION get_next_skurl_req_id(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_get_next_skurl_req_id' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION do_notif_mgt(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_do_notif_mgt' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION purge_notif(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_purge_notif' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION handle_kws_prop_change(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_handle_kws_prop_change' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION check_kws_login(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_check_kws_login' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION set_freemium_user(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_set_freemium_user' LANGUAGE C STRICT;
+CREATE OR REPLACE FUNCTION get_usage_and_license_info(bytea) RETURNS bytea AS 'libkcdpg', 'kcdpg_get_usage_and_license_info' LANGUAGE C STRICT;
+

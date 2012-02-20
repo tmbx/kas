@@ -1,0 +1,16 @@
+<div class="block block-members">
+    <div class="block-header">
+        <h2>Members</h2>
+    </div>
+    <div class="block-content">
+        <div class="block-wrapper">
+            <div id="members_list" class="members-list">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden Html-->
+<div id="member_template_container" style="display:none">
+    <dl class="var_user_status_class"><dt>var_user_name</dt> <dd><a href="mailto:var_user_email">var_user_email</a></dd></dl>
+</div>
