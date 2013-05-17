@@ -18,12 +18,10 @@ Default(None)
 ### FUNCTIONS #############################################################
 ###########################################################################
 
-# This method returns the revision of the Mercurial repository. If you modify
-# this function, be sure that it still works under MinGW.
-def get_hg_rev():
-        proc = Popen(args = "hg tip | head -n 1 | cut -d ' ' -f 4", stdout=PIPE, shell = True)
-        (hg_rev, err) = proc.communicate()
-	return hg_rev.rstrip()
+def get_git_rev():
+        proc = Popen(args = "git log -n 1 --pretty=oneline | cut -d ' ' -f 1", stdout=PIPE, shell = True)
+        (git_rev, err) = proc.communicate()
+        return git_rev.strip();
 
 ### This function prints the current configuration.
 def print_current_config():
@@ -97,11 +95,11 @@ def get_kcd_target():
 	lib_path =	[KTOOLS_LIB_PATH]
 	lib_list = 	['ktools', 'gnutls', 'pq', 'mhash']
 	
-	hg_rev = get_hg_rev()
+	git_rev = get_git_rev()
         if BUILD_ENV["PLATFORM"] == "windows":
-		cpp_defines.append('-DBUILD_ID=\\"%s\\"' % hg_rev);
+		cpp_defines.append('-DBUILD_ID=\\"%s\\"' % git_rev);
 	else:
-		cpp_defines.append("-DBUILD_ID='\"%s\"'" % hg_rev);
+		cpp_defines.append("-DBUILD_ID='\"%s\"'" % git_rev);
 	
 	env = BUILD_ENV.Clone()
 	env.Append	(
@@ -129,9 +127,7 @@ def get_kcdpg_target():
 			'common/kmod_base.c'
 			]
 	
-        # Handle the Postgres header stuff. We need to use the
-        # explicit path to PostgreSQL 8.4.
-        proc = Popen(args = ["/usr/lib/postgresql/8.4/bin/pg_config", "--includedir-server", "--includedir"], stdout=PIPE, shell = False)
+        proc = Popen(args = ["pg_config", "--includedir-server", "--includedir"], stdout=PIPE, shell = False)
         (pg_hdr, err) = proc.communicate()
         
 	cpp_path = 	[KTOOLS_CPP_PATH, 'common', 'kcdpg', pg_hdr.splitlines()]
@@ -189,11 +185,11 @@ def get_ktlstunnel_target():
                               'C:/birtz/lib/gnutls-2.4.1/teambox'
                             ]
          
-	hg_rev = get_hg_rev()
+	git_rev = get_git_rev()
         if BUILD_ENV["PLATFORM"] == "windows":
-		cpp_defines.append('-DBUILD_ID=\\"%s\\"' % hg_rev);
+		cpp_defines.append('-DBUILD_ID=\\"%s\\"' % git_rev);
 	else:
-		cpp_defines.append("-DBUILD_ID='\"%s\"'" % hg_rev);
+		cpp_defines.append("-DBUILD_ID='\"%s\"'" % git_rev);
 	
 	env = BUILD_ENV.Clone()
 	env.Append	(
@@ -320,7 +316,7 @@ opts.AddOptions	(
 		('libktools_lib', 'Location of library files for libktools', '#../libktools/build'),
 		("DESTDIR", 'Root of installation', '/'),
 		('BINDIR', 'Executable path', '/bin'),
-		('PGPKGLIBDIR', 'Postgresql library path', '/usr/lib/postgresql/8.4/lib'),
+		('PGPKGLIBDIR', 'Postgresql library path', '/usr/lib/postgresql/9.1/lib'),
 		)
 		
 opts.Update(opts_env)
