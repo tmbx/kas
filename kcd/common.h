@@ -5,6 +5,7 @@
 
 #include <gnutls/gnutls.h>
 
+#include "config_path.h"
 #include "log_level.h"
 #include "kmod_base.h"
 #include "misc.h"

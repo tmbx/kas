@@ -5,7 +5,7 @@
 #include "syslog.h"
 
 #define KCD_MAX_LABEL_SIZE          50
-#define KCD_DEBUG_FILE_PATH         "/etc/teambox/kcd_debug"
+#define KCD_DEBUG_FILE_PATH         CONFIG_PATH"/kcd_debug"
 
 /* KCD log name to log flags table. */
 struct kcd_log_name_entry {
@@ -73,9 +73,9 @@ static void kdaemon_init() {
     karray_init(&global_opts.org_name_array);
     kstr_init(&global_opts.listen_addr);
     kstr_init(&global_opts.config_path);
-    kstr_assign_cstr(&global_opts.config_path, "/etc/teambox/kcd/kcd.ini");
+    kstr_assign_cstr(&global_opts.config_path, CONFIG_PATH"/kcd/kcd.ini");
     kstr_init(&global_opts.kfs_ini_path);
-    kstr_assign_cstr(&global_opts.kfs_ini_path, "/etc/teambox/kcd/kfs.ini");
+    kstr_assign_cstr(&global_opts.kfs_ini_path, CONFIG_PATH"/kcd/kfs.ini");
     kstr_init(&global_opts.ssl_cert_path);
     kstr_init(&global_opts.ssl_key_path);
     kstr_init(&global_opts.kmod_binary_path);
@@ -204,9 +204,9 @@ static void kdaemon_print_usage(FILE *stream) {
                     "Options:\n"
 		    "-l <level>       Set a log level. Default to 'brief'.\n"
 		    "-c <path>        Path to the main configuration file. Default to\n"
-		    "                   /etc/teambox/kcd/kcd.ini.\n"
+		    "                   "CONFIG_PATH"/kcd/kcd.ini.\n"
                     "-f <path>        Path to the KFS configuration file. Default to\n"
-                    "                   /etc/teambox/kcd/kfs.ini.\n"
+                    "                   "CONFIG_PATH"/kcd/kfs.ini.\n"
 		    "-P <lock path>   Set the path to the lock file. If not specified, no\n"
 		    "                   lock file is created.\n"
 		    "-h               Show this help message and exit.\n"
@@ -460,6 +460,7 @@ static int kcd_parse_kfs_ini() {
     int64_t i64;
     dictionary *d = NULL;
     char *str;
+
     
     do {
 	d = iniparser_load(global_opts.kfs_ini_path.data);

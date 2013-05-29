@@ -43,7 +43,7 @@ static void kcd_mgt_get_kcd_admin_pwd(kstr *pwd) {
     kbuffer_init(&buf);
     kstr_reset(pwd);
     
-    if (!kfs_read_file("/etc/teambox/base/admin_pwd", &buf)) {
+    if (!kfs_read_file(CONFIG_PATH"/base/admin_pwd", &buf)) {
         for (i = 0; i < (int)buf.len; i++) {
             char c = buf.data[i];
             if (kmod_is_whitespace(c)) break;

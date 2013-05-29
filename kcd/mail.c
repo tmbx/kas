@@ -129,7 +129,7 @@ int kcd_mail_template_read(struct kcd_mail_template *self, char *name) {
     kstr path, content, cur_str;
     
     kbuffer_init(&buf);
-    kstr_init_sf(&path, "/etc/teambox/kcd/mail/%s.tmpl", name);
+    kstr_init_sf(&path, CONFIG_PATH"/kcd/mail/%s.tmpl", name);
     kstr_init(&content);
     kstr_init(&cur_str);
     

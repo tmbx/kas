@@ -210,6 +210,17 @@ def get_ktlstunnel_target():
 		)
 
 
+def config_h_build(target, source, env):
+    #config_h_defines = conf_options
+  
+    for a_target, a_source in zip(target, source):
+        config_h = file(str(a_target), "w")
+        config_h_in = file(str(a_source), "r")
+        config_h.write(config_h_in.read() % {'config_path': opts_dict['CONFIG_PATH']})
+        config_h_in.close()
+        config_h.close()
+
+
 ### This function returns the target to build the kcd program.
 def get_vnc_target():
 
@@ -274,6 +285,11 @@ def get_build_list(build_flag, install_flag):
 	
 	build_list_init = 1
 	
+        # Always generate the configuration file.
+        build_list.append(AlwaysBuild(BUILD_ENV.Command('common/config_path.h', 
+                                                        'common/config_path.h.in',
+                                                        config_h_build)))
+
 	if KCD_FLAG:
 	    t = get_kcd_target()
 	    if build_flag: build_list.append(t)
@@ -317,6 +333,7 @@ opts.AddOptions	(
 		("DESTDIR", 'Root of installation', '/'),
 		('BINDIR', 'Executable path', '/bin'),
 		('PGPKGLIBDIR', 'Postgresql library path', '/usr/lib/postgresql/9.1/lib'),
+                ('CONFIG_PATH', 'Configuration path', '/etc/teambox')
 		)
 		
 opts.Update(opts_env)
