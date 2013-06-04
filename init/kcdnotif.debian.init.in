@@ -1,20 +1,20 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:          kcd
+# Provides:          kcdnotif
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Teambox Collaboration Daemon, Frontend
-# Description:       Teambox Collaboration Daemon, Frontend
+# Short-Description: Teambox Collaboration Daemon, Notification mode
+# Description:       Teambox Collaboration Daemon, Notification mode
 ### END INIT INFO
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
-DESC="Teambox collaboration daemon frontend mode"
-NAME=kcd
+DESC="Teambox collaboration daemon notification mode"
+NAME=kcdnotif
 DAEMON="@@PREFIX@@/bin/kcd"
 SCRIPTNAME=/etc/init.d/$NAME.sh
-LOCKFILE=/var/lock/kcd.lock
+LOCKFILE=/var/lock/kcdnotif.lock
 LD_LIBRARY_PATH="@@PREFIX@@/lib"
 
 export LD_LIBRARY_PATH PATH
@@ -38,7 +38,7 @@ do_start()
 	#   0 if daemon has been started
 	#   1 if daemon was already running
 	#   2 if daemon could not be started
-        $DAEMON closefd start frontend -P $LOCKFILE
+        $DAEMON closefd start notif -P $LOCKFILE
 }
 
 #

@@ -1,23 +1,23 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:          kcd
+# Provides:          kasmond
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Teambox Collaboration Daemon, Frontend
-# Description:       Teambox Collaboration Daemon, Frontend
+# Short-Description: Teambox Collaboration Monitoring Daemon
+# Description:       Teambox Collaboration Monitoring Daemon
 ### END INIT INFO
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
-DESC="Teambox collaboration daemon frontend mode"
-NAME=kcd
-DAEMON="@@PREFIX@@/bin/kcd"
-SCRIPTNAME=/etc/init.d/$NAME.sh
-LOCKFILE=/var/lock/kcd.lock
-LD_LIBRARY_PATH="@@PREFIX@@/lib"
-
-export LD_LIBRARY_PATH PATH
+DESC="kasmond"
+NAME=kasmond
+PIDFILE="/var/run/${NAME}.pid"
+DAEMON="@@PREFIX@@/bin/kasmond"
+DAEMON_ARGS="-t -p ${PIDFILE}"
+SCRIPTNAME=${NAME}
+XNAME="/usr/bin/python"
+YNAME="kasmond"
 
 # Exit if the package is not installed
 [ -x "$DAEMON" ] || exit 0
@@ -38,7 +38,10 @@ do_start()
 	#   0 if daemon has been started
 	#   1 if daemon was already running
 	#   2 if daemon could not be started
-        $DAEMON closefd start frontend -P $LOCKFILE
+	start-stop-daemon --start --quiet --startas $DAEMON --exec $XNAME --pidfile $PIDFILE \
+		--test > /dev/null || return 1
+	start-stop-daemon --start --quiet --startas $DAEMON --exec $XNAME --pidfile $PIDFILE \
+		-- $DAEMON_ARGS || return 2
 }
 
 #
@@ -51,7 +54,14 @@ do_stop()
 	#   1 if daemon was already stopped
 	#   2 if daemon could not be stopped
 	#   other if a failure occurred
-        $DAEMON stop -P $LOCKFILE
+	start-stop-daemon --stop --quiet --pidfile $PIDFILE --name $YNAME \
+		--retry=TERM/10/KILL/5
+	RETVAL="$?"
+	[ "$RETVAL" = 2 ] && return 2
+	
+	# Many daemons don't delete their pidfiles when they exit.
+	rm -f $PIDFILE
+	return "$RETVAL"
 }
 
 #
@@ -63,7 +73,7 @@ do_reload() {
 	# restarting (for example, when it is sent a SIGHUP),
 	# then implement that here.
 	#
-	#start-stop-daemon --stop --signal 1 --quiet --name $NAME
+	#start-stop-daemon --stop --signal 1 --quiet --name $YNAME
 	return 0
 }
 
