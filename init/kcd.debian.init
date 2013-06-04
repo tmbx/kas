@@ -16,6 +16,9 @@ NAME=kcd
 DAEMON=@@PREFIX@@/bin/kcd
 SCRIPTNAME=/etc/init.d/$NAME.sh
 LOCKFILE=/var/lock/kcd.lock
+LD_LIBRARY_PATH=@@PREFIX@@/lib
+
+export LD_LIBRARY_PATH PATH
 
 # Exit if the package is not installed
 [ -x "$DAEMON" ] || exit 0
