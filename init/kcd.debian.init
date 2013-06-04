@@ -1,5 +1,4 @@
 #!/bin/sh
-#! /bin/sh
 ### BEGIN INIT INFO
 # Provides:          kcd
 # Required-Start:    $remote_fs $syslog
