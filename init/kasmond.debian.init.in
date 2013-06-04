@@ -18,6 +18,9 @@ DAEMON_ARGS="-t -p ${PIDFILE}"
 SCRIPTNAME=${NAME}
 XNAME="/usr/bin/python"
 YNAME="kasmond"
+PYTHONPATH="@@PREFIX@@/share/python-support/kpython"
+
+export PYTHONPATH
 
 # Exit if the package is not installed
 [ -x "$DAEMON" ] || exit 0
