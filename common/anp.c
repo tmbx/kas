@@ -160,7 +160,7 @@ static int anp_read_ensure_type(kbuffer *buf, uint8_t expected_type) {
     if (kbuffer_read8(buf, &actual_type)) return -1;
     
     if (actual_type != expected_type) {
-	kmod_set_error("expected type %s, got type %s", anp_type_name(expected_type), anp_type_name(actual_type));
+	kmod_set_error("expected type %s, got type %s (%d)", anp_type_name(expected_type), anp_type_name(actual_type), actual_type);
 	return -1;
     }
     

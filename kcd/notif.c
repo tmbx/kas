@@ -646,7 +646,7 @@ static void kcd_notif_set_summary_time(struct kcd_notif_state *st) {
     time_t now = time(NULL);
     float diff;
     
-    if (kfs_regular("/etc/teambox/summary_debug")) {
+    if (kfs_regular(CONFIG_PATH"/summary_debug")) {
         st->summary_time = now + 20;
     }
     

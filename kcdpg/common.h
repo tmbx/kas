@@ -3,6 +3,7 @@
 #ifndef _COMMON_H
 #define _COMMON_H
 
+#include "config_path.h"
 #include "kmod_base.h"
 #include "anp.h"
 #include "kanp_core_defs.h"

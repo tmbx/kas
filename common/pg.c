@@ -356,7 +356,7 @@ void pg_db_add_bytea(struct pg_db_conn *self, kstr *to, kbuffer *from) {
     size_t tmp_len;
     char *tmp = PQescapeByteaConn(self->pg_conn, from->data, from->len, &tmp_len);
     if (! tmp) kerror_fatal("out of memory");
-    kstr_append_cstr(to, "E'");
+    kstr_append_cstr(to, "'");
     kstr_append_buf(to, tmp, tmp_len - 1);
     kstr_append_char(to, '\'');
     PQfreemem(tmp);

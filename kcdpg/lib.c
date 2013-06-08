@@ -379,7 +379,7 @@ void _PG_init() {
     kcdpg_libpq_init();
     
     /* Enable debugging if required. */
-    if (kfs_regular("/etc/teambox/pg_debug")) kcdpg_debug_flag = 1;
+    if (kfs_regular(CONFIG_PATH"/pg_debug")) kcdpg_debug_flag = 1;
     KCDPG_DEBUG("libkcdpg.so loaded");
 }
 
