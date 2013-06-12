@@ -42,6 +42,8 @@ def load_environment(global_conf, app_conf):
     # Get default master file path (if not defined in the paster configuration file).
     if not config.has_key('master_file_path'):
         config['master_file_path'] = RootConfigNode.master_file_path
+    else:
+        RootConfigNode.master_file_path = config['master_file_path']
   
     # Cache master config.
     cache_master_config(path=config['master_file_path'])
