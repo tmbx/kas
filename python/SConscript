@@ -25,6 +25,8 @@ python_FILES = [
     'kfs_lib.py',
     'kcd_lib.py',
     'kcd_client.py',
+    'kasmodel.py',
+    'kasmodeltool.py',
     'ksamba.py']
 
 python_PROGS = [
