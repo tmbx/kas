@@ -13,12 +13,13 @@ setup(
     author_email='',
     url='',
     install_requires=[
-        "Pylons>=0.9.7",
-        "SQLAlchemy>=0.5",
+        "Pylons==0.9.7",
+        "SQLAlchemy==0.5.1",
         "psycopg2",
-        "Shabti",
+        "Shabti==0.3.2b",
         "Elixir",
-        "gp.fileupload"
+        "gp.fileupload",
+        "beaker==1.2.2"
     ],
     setup_requires=["PasteScript>=1.6.3"],
     packages=find_packages(exclude=['ez_setup']),
