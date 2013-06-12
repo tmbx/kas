@@ -2,7 +2,7 @@
 
 # from system
 import os, time, struct, random, pgdb, ConfigParser, logging
-from  pyPgSQL import PgSQL
+import psycopg2 as PgSQL
 
 # local
 from kcdpg import KCD_KWS_LOGIN_TYPE_SECURE
@@ -62,7 +62,7 @@ class BaseKcdClient(tcp_client.TcpClient):
         self.db_connect()
 
         # Do the query.
-        query = "SELECT %s(E'%s')" % ( stored_proc_name, pgdb.escape_bytea(args_payload) )
+        query = "SELECT %s('%s')" % ( stored_proc_name, pgdb.escape_bytea(args_payload) )
         cur = kpg.exec_pg_query_rb_on_except(self.db_conn, query)
         row = cur.fetchone()
         self.db_conn.commit()

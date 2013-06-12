@@ -1,6 +1,6 @@
 # from system
 import ConfigParser, random, struct
-from pyPgSQL import PgSQL
+import psycopg2 as PgSQL
 
 from kpg import open_pg_conn
 from kasmodel import RootConfigNode
@@ -64,8 +64,8 @@ def get_kcd_external_conf_object(master_config=None, path=default_master_file_pa
     conf = PropStore()
 
     # Fill db options.
-    conf.db_host = master_config.kcd_host
-    conf.db_port = 5432
+    conf.db_host = master_config.kcd_db_host
+    conf.db_port = master_config.kcd_db_port
     conf.db_user = 'external'
     conf.db_passwd = master_config.kcd_pwd
     if conf.db_passwd == None or conf.db_passwd == '': conf.db_passwd = master_config.admin_pwd
