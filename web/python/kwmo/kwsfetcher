@@ -14,7 +14,8 @@ paster_config_path = first_existing_file([
     'development.ini'])
 
 # Path for storing kwsfetcher information.
-fetcher_path = "/var/teambox/kwsfetcher/workspaces"
+#fetcher_path = "/var/teambox/kwsfetcher/workspaces"
+fetcher_path = "/tmp/teambox"
 
 # Keepalive parameters. See the Linux documentation for details. We want the
 # connection to time out after 6 minutes.
@@ -137,9 +138,9 @@ class WSFetcher(object):
         results = exec_pg_select_rb(kcd_db_conn,
             "select creation_date, name, flags from kcd_kws_list where kws_id = %s" % ( ntos(self.ws.id) ) )
         row = results[0]
-        self.ws.creation_date = row["creation_date"]
-        self.ws.name = row["name"]
-        flags = row["flags"]
+        self.ws.creation_date = row[0]
+        self.ws.name = row[1]
+        flags = row[2]
         self.ws.public = False
         if flags & KANP_KWS_FLAG_PUBLIC:
             self.ws.public = True
@@ -158,7 +159,7 @@ class WSFetcher(object):
         results = exec_pg_select_rb(kcd_db_conn,
             "select flags from kcd_kws_list where kws_id = %s" % ( ntos(self.ws.id) ) )
         row = results[0]
-        kcd_deleted = bool(row['flags'] & KANP_KWS_FLAG_DELETE)
+        kcd_deleted = bool(row[0] & KANP_KWS_FLAG_DELETE)
 
         if kcd_deleted and not self.ws.deleted:
             # Workspace is deleted but local database doesn't know that yet.
@@ -322,7 +323,7 @@ class WSFetcher(object):
 
         if len(results) > 0:
             row = results[0]
-            port = row["port"]
+            port = row[0]
             vnc_session.port = port
         else:
             vnc_session.port = 9999 #invalid port
@@ -602,7 +603,7 @@ class WSFetcher(object):
             if len(results) == 0: break
  
             for row in results:
-                evt = WSEvent(self.ws.id, row["evt_id"], row["major"], row["minor"], row["type"], row["event"].value)
+                evt = WSEvent(self.ws.id, row[0], row[1], row[2], row[3], row[4])
                 self.handle_event(evt)
             
 # This function consumes all the notifications received from Postgres. If a
@@ -612,40 +613,43 @@ def consume_pg_notif(db):
     processed = 0
     
     while 1:
-        n = db.conn.notifies()
-        if not n: break
+        notifs = db.notifies
+        if not notifs or len(notifs) == 0:
+            break
         processed = 1
         
-        # Notification for kws_list.
-        if n.relname == "kws_list":
-            poll_kws_list_flag = 1
+        logger.debug("Found " + str(len(notifs)) + " notifications: " + str(notifs))
         
-        # Notification for a workspace.
-        else:
-            match = re.compile('kws_(\d+)_perm_check').match(n.relname)
-            if match:
-                kws_id = int(match.group(1))
-                if kws_dict.has_key(kws_id):
-                    kws_dict[kws_id].perm_check_flag = 1
- 
+        # Notification for kws_list.
+        while db.notifies:
+            n = db.notifies.pop()
+            if n.channel == "kws_list":
+                poll_kws_list_flag = 1
+        
+            # Notification for a workspace.
             else:
-                match = re.compile('kws_(\d+)_event_log').match(n.relname)
+                match = re.compile('kws_(\d+)_perm_check').match(n.channel)
                 if match:
                     kws_id = int(match.group(1))
                     if kws_dict.has_key(kws_id):
-                        kws_dict[kws_id].poll_flag = 1
-
+                        kws_dict[kws_id].perm_check_flag = 1 
                 else:
-                    raise Exception("cannot match notification name " + n.relname)
-
+                    match = re.compile('kws_(\d+)_event_log').match(n.channel)
+                    if match:
+                        kws_id = int(match.group(1))
+                        if kws_dict.has_key(kws_id):
+                            kws_dict[kws_id].poll_flag = 1
+                    else:
+                        raise Exception("cannot match notification name " + n.channel)
     return processed
 
 # This function waits for a notification from Postgres.
 def wait_for_pg_notif(db):
     while 1:
-        db.conn.consumeInput()
+        #db.conn.consumeInput()
+        db.poll()
         if consume_pg_notif(db): return
-        select.select([db.conn.socket], [], [], 0.1)
+        select.select([db], [], [], 0.1)
     
 # This function starts listening to the workspace list.
 def listen_kws_list():
@@ -758,7 +762,7 @@ def enable_keepalive():
         # The socket module insists to duplicate the file descriptor when it
         # creates a socket object from a numeric file descriptor. It does not
         # matter: both file descriptors refer to the same socket.
-        sock = socket.fromfd(kcd_db_conn.conn.socket, socket.AF_INET, socket.SOCK_STREAM)
+        sock = socket.fromfd(kcd_db_conn, socket.AF_INET, socket.SOCK_STREAM)
         sock.setsockopt(socket.SOL_TCP, socket.TCP_KEEPIDLE, tcp_keepalive_time)
         sock.setsockopt(socket.SOL_TCP, socket.TCP_KEEPINTVL, tcp_keepalive_intvl)
         sock.setsockopt(socket.SOL_TCP, socket.TCP_KEEPCNT, tcp_keepalive_probes)
