@@ -37,7 +37,7 @@ class TBSOSService(object):
     # Update object from configuration.
     def update_from_conf(self, conf):
         self.enabled = bool(conf.tbsos_service)
-        self.configured = conf.is_tbsos_config_complete()
+        self.configured = conf.is_tbxsos_config_complete()
 
 # Freemium service
 class FreemiumService(object):
@@ -59,8 +59,6 @@ class K2Services(odict):
         odict.__init__(self, *args, **kwargs)
 
         # Initialize services.
-        self['mas'] = MASService()
-        self['wps'] = WPSService()
         self['tbsos'] = TBSOSService()
         self['freemium'] = FreemiumService()
 

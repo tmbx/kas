@@ -1,13 +1,23 @@
+# Hey, Emacs! This is a -*- Python -*- file!
 #
-# build.py
-# Copyright (C) 2005-2012 Opersys inc., All rights reserved.
+# Copyright (C) 2006-2012 Opersys inc.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# This file contains some utility functions for our SConstruct.
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 import platform, sys, re, os
 from SCons.Environment import Environment, Base
 from SCons.Builder import Builder
+from SCons.Tool.textfile import _text_builder
 
 # Get the cpu architechture we run on.
 def get_arch():
@@ -187,7 +197,8 @@ class KEnvironment(Base):
 
 	self.Append(BUILDERS = {'Link' : Builder(action = Link),
 			        'ExtractSerializable' : Builder(action = extract_serializable, suffix = '.c', src_suffix = '.c'),
-			        'ExtractTests' : Builder(action = extract_tests, suffix = '.c', src_suffix = '.c')})
+			        'ExtractTests' : Builder(action = extract_tests, suffix = '.c', src_suffix = '.c'),
+                                'Textfile': _text_builder})
 
 	# Set the listener and tell them the value has changed.
 	if listeners:

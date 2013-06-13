@@ -88,8 +88,8 @@ def get_local_db_url():
 
 # Get KCD database url.
 def get_kcd_db_url():
-    if _config_cache.kcd_host != None and _config_cache.kcd_host != '':
-        kcd_host = _config_cache.kcd_host
+    if _config_cache.kcd_db_host != None and _config_cache.kcd_db_host != '':
+        kcd_host = _config_cache.kcd_db_host
         kcd_db_user = 'external'
         kcd_db_pwd = _config_cache.kcd_pwd
         if not kcd_db_pwd: kcd_db_pwd = _config_cache.admin_pwd

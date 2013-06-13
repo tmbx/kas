@@ -309,6 +309,9 @@ def get_build_list(build_flag, install_flag):
 	    t = get_vnc_target()
 	    if build_flag: build_list.append(t)
 	    if install_flag: build_list.append(AlwaysBuild(BUILD_ENV.Install(BINDIR, source=t)))
+
+        if install_flag:
+                build_list.append(SConscript("python/SConscript", exports = 'BUILD_ENV opts_dict'))
 	
 	return build_list
 
@@ -333,7 +336,8 @@ opts.AddOptions	(
 		("DESTDIR", 'Root of installation', '/'),
 		('BINDIR', 'Executable path', '/bin'),
 		('PGPKGLIBDIR', 'Postgresql library path', '/usr/lib/postgresql/9.1/lib'),
-                ('CONFIG_PATH', 'Configuration path', '/etc/teambox')
+                ('CONFIG_PATH', 'Configuration path', '/etc/teambox'),
+                ('PYTHONDIR', 'Directory where Python files are installed', '/usr/share/teambox/python')
 		)
 		
 opts.Update(opts_env)

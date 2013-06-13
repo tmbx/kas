@@ -337,11 +337,6 @@ class TeamboxesController(BaseController):
         
     
     def show(self):
-
-        if not (c.services['mas'].configured and c.services['mas'].enabled):
-            # Disallow access.
-            return redirect_to(url_for('status'))
-
         # Push variables to templates.
         c.GT = GT
         c.dyn_ress_id = dyn_ress_id

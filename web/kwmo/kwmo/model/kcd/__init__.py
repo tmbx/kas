@@ -7,7 +7,7 @@ import sys
 # Imports
 import logging
 from sqlalchemy import create_engine
-from sqlalchemy.exceptions import OperationalError
+from sqlalchemy.exc import OperationalError
 import elixir
 from elixir import setup_all
 elixir.metadata = None
