@@ -44,7 +44,10 @@ def InstallTree(treeDir, baseDir):
             install_list.append(BUILD_ENV.Install(targetDir, sourceFile))
     return install_list
 
+# The static data is installed in the root of the web directory.
 staticTree = InstallTree('www', wwwParent)
+
+# Individual application create their own directories.
 kas_cfg = InstallTree('kas_cfg', wwwRoot)
 freemium = InstallTree('freemium', wwwRoot)
 kwmo = InstallTree('kwmo', wwwRoot)
