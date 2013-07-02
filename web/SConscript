@@ -52,7 +52,26 @@ kas_cfg = InstallTree('kas_cfg', wwwRoot)
 freemium = InstallTree('freemium', wwwRoot)
 kwmo = InstallTree('kwmo', wwwRoot)
 
-install_list = staticTree + kas_cfg + freemium + kwmo
+tf_env = BUILD_ENV.Clone()
+tf_env.Append(PYTHONDIR = opts_dict['PYTHONDIR'],
+              WWWDIR = opts_dict['WWWDIR'])
+
+# Predefine LINESEPARATOR or Textfile will choke.
+tf_env['LINESEPARATOR'] = os.linesep
+
+# Install the platform configuration file for the web app.
+cfg_kas = tf_env.Textfile(File(os.path.join('kas_cfg', 'teambox_cfg.py')),
+                          ["SYS_PATHS=['$PYTHONDIR']",
+                           "SITE_DIRS=['$WWWDIR/kas_cfg']"])
+cfg_kwmo = tf_env.Textfile(File(os.path.join('kwmo', 'teambox_cfg.py')),
+                           ["SYS_PATHS=['$PYTHONDIR\']",
+                            "SITE_DIRS=['$WWWDIR/kwmo']"])
+cfg_freemium = tf_env.Textfile(File(os.path.join('freemium', 'teambox_cfg.py')),
+                               ["SYS_PATHS=['$PYTHONDIR']",
+                                "SITE_DIRS=['$WWWDIR/freemium']"])
+
+install_list = staticTree + kas_cfg + freemium + kwmo 
+install_list = install_list + cfg_kas + cfg_kwmo + cfg_freemium
 
 Return('install_list')
                         
