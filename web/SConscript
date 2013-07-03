@@ -80,5 +80,15 @@ for rf in random_files:
     rfTrg = os.path.join(opts_dict['PYTHONDIR'])
     install_list = install_list + BUILD_ENV.Install(source = rfSrc, target = rfTrg)
 
+# The Apache configuration
+apacheCfgTmpl = File("teambox-sites.conf.in")
+apacheCfgTarget = Dir("/etc/apache2/conf.d")
+apacheCfgSource = File("teambox-site.conf")
+
+substs = {'\$WWWDIR', opts_dict['WWWDIR'],
+          '\$PYTHONDIR', opts_dict['PYTHONDIR']}
+tf_env.Substfile(apacheCfgTmpl, SUBST_DICT = substs)
+install_list = install_list + Install(source = apacheCfgSource, target = apacheCfgTarget)
+
 Return('install_list')
                         

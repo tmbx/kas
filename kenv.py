@@ -17,7 +17,7 @@
 import platform, sys, re, os
 from SCons.Environment import Environment, Base
 from SCons.Builder import Builder
-from SCons.Tool.textfile import _text_builder
+from SCons.Tool.textfile import _text_builder, _subst_builder
 
 # Get the cpu architechture we run on.
 def get_arch():
@@ -198,7 +198,8 @@ class KEnvironment(Base):
 	self.Append(BUILDERS = {'Link' : Builder(action = Link),
 			        'ExtractSerializable' : Builder(action = extract_serializable, suffix = '.c', src_suffix = '.c'),
 			        'ExtractTests' : Builder(action = extract_tests, suffix = '.c', src_suffix = '.c'),
-                                'Textfile': _text_builder})
+                                'Textfile': _text_builder,
+                                'Substfile': _subst_builder})
 
 	# Set the listener and tell them the value has changed.
 	if listeners:

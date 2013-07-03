@@ -1,0 +1,63 @@
+WSGIPythonPath $VIRTUALENV/lib/python2.6/site-packages/:$PYTHONDIR
+WSGIPythonHome $VIRTUALENV
+
+<VirtualHost 0.0.0.0:80>
+
+    Alias /freemium/images/base/             $WWWDIR/images/base/
+    Alias /freemium/applets/base/            $WWWDIR/applets/base/
+    Alias /freemium/css/base/                $WWWDIR/css/base/
+    Alias /freemium/javascripts/base/        $WWWDIR/javascripts/base/
+    Alias /freemium/html/base/               $WWWDIR/html/base/
+
+    Alias /freemium/images/                  $WWWDIR/freemium/freemium/public/images/
+    Alias /freemium/applets/                 $WWWDIR/freemium/freemium/public/applets/
+    Alias /freemium/css/                     $WWWDIR/freemium/freemium/public/css/
+    Alias /freemium/javascripts/             $WWWDIR/freemium/freemium/public/javascripts/
+    Alias /freemium/html/                    $WWWDIR/freemium/freemium/public/html/
+
+    Alias /images/base/             $WWWDIR/kwmo/images/base/
+    Alias /applets/base/            $WWWDIR/kwmo/applets/base/
+    Alias /css/base/                $WWWDIR/kwmo/css/base/
+    Alias /javascripts/base/        $WWWDIR/javascripts/base/
+    Alias /html/base/               $WWWDIR/html/base/
+
+    Alias /images/                  $WWWDIR/kwmo/kwmo/public/images/
+    Alias /applets/                 $WWWDIR/kwmo/kwmo/public/applets/
+    Alias /css/                     $WWWDIR/kwmo/kwmo/public/css/
+    Alias /javascripts/             $WWWDIR/kwmo/kwmo/public/javascripts/
+    Alias /html/                    $WWWDIR/kwmo/kwmo/public/html/
+
+    Alias /kascfg/images/base/	    $WWWDIR/images/base/
+    Alias /kascfg/applets/base/     $WWWDIR/applets/base/
+    Alias /kascfg/css/base/ 	    $WWWDIR/css/base/
+    Alias /kascfg/javascripts/base/ $WWWDIR/javascripts/base/
+    Alias /kascfg/html/base/ 	    $WWWDIR/html/base/
+
+    Alias /kascfg/images/	    $WWWDIR/kas_cfg/kascfg/public/images/
+    Alias /kascfg/applets/	    $WWWDIR/kas_cfg/kascfg/public/applets/
+    Alias /kascfg/css/ 		    $WWWDIR/kas_cfg/kascfg/public/css/
+    Alias /kascfg/javascripts/ 	    $WWWDIR/kas_cfg/kascfg/public/javascripts/
+    Alias /kascfg/html/		    $WWWDIR/kas_cfg/kascfg/public/html/
+
+    WSGIDaemonProcess freemium_wsgi
+    WSGIScriptAlias /freemium $WWWDIR/freemium/app.wsgi
+
+    WSGIDaemonProcess kascfg_wsgi
+    WSGIScriptAlias /kascfg   $WWWDIR/kas_cfg/app.wsgi
+
+    WSGIDaemonProcess kwmo_wsgi
+    WSGIScriptAlias / $WWWDIR/kwmo/app.wsgi
+
+    <Location /freemium>
+      WSGIProcessGroup freemium_wsgi
+    </Location>
+    
+    <Location /kascfg>
+      WSGIProcessGroup kascfg_wsgi
+    </Location>
+
+    <Location />
+      WSGIProcessGroup kwmo_wsgi
+    </Location>
+
+</VirtualHost>
