@@ -20,10 +20,12 @@ def make_map():
 
     # CUSTOM ROUTES HERE
     
-    map.connect('/freemium/registration', controller='registration', action='create')
-    map.connect('confirm', '/freemium/registration_confirm/{email}/{nonce}', controller='registration', action='confirm')
-    map.connect('verify_user', '/freemium/registration/{email}/verify', controller='registration', action='verify')
-    map.connect('license', '/freemium/license', controller='license', action='show')    
+    map.connect('/registration', controller='registration', action='create')
+    map.connect('confirm', '/registration_confirm/{email}/{nonce}', 
+                controller='registration', action='confirm')
+    map.connect('verify_user', '/registration/{email}/verify', 
+                controller='registration', action='verify')
+    map.connect('license', '/license', controller='license', action='show')    
     #map.connect('/{controller}/{action}')
     #map.connect('/{controller}/{action}/{id}')
 
