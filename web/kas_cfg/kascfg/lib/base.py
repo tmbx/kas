@@ -3,7 +3,7 @@
 Provides the BaseController class for subclassing.
 """
 from pylons.controllers import WSGIController
-from pylons.controllers.util import redirect_to
+from pylons.controllers.util import redirect
 from pylons.templating import render_mako as render
 from pylons import config, session as web_session, tmpl_context as c
 from routes import url_for
@@ -63,7 +63,7 @@ class BaseController(WSGIController):
             if not web_session.has_key('logged') or web_session['logged'] != True:
                 # User is not logged.
                 log.info("User not logged... redirecting to the login page.")
-                return redirect_to(url_for('login'))
+                return redirect(url_for('login'))
 
         c.logged = False
         if web_session.has_key('logged') and web_session['logged']:
