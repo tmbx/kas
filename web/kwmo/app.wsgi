@@ -1,6 +1,9 @@
 # Hey emacs, this is -*- Python -*-
 
-import site,sys
+import site,sys,os
+
+sys.path.append(os.path.dirname(__file__))
+
 import teambox_cfg
 
 for p in teambox_cfg.SYS_PATHS:
