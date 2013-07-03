@@ -77,7 +77,7 @@ install_list = install_list + cfg_kas + cfg_kwmo + cfg_freemium
 random_files = ["cfgcommon.py", "strings_base.py"]
 for rf in random_files:
     rfSrc = os.path.join("python", "base", rf)
-    rfTrg = os.path.join(opts_dict['PYTHONDIR'], rf)
+    rfTrg = os.path.join(opts_dict['PYTHONDIR'])
     install_list = install_list + BUILD_ENV.Install(source = rfSrc, target = rfTrg)
 
 Return('install_list')
