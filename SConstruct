@@ -356,6 +356,7 @@ opts.AddOptions	(
                 ('CONFIG_PATH', 'Configuration path', '/etc/teambox'),
                 ('PYTHONDIR', 'Directory where Python files are installed', '/usr/share/teambox/python'),
                 ('WWWDIR', 'Root directory of the web applications', '/usr/share/teambox/www'),
+                ('VIRTUALENV', 'Path to the Python virtual environment made externally for the Python-based components.', '/usr/share/teambox/virtualenv')
 		)
 		
 opts.Update(opts_env)
