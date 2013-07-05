@@ -17,9 +17,9 @@ setup(
         "SQLAlchemy==0.5.1",
         "psycopg2",
         "Shabti==0.3.2b",
-        "Elixir",
-        "gp.fileupload",
-        "beaker==1.2.2"
+        "Elixir==0.6.1",
+        "gp.fileupload==0.8",
+        "beaker==1.3"
     ],
     setup_requires=["PasteScript>=1.6.3"],
     packages=find_packages(exclude=['ez_setup']),
