@@ -12,7 +12,7 @@
 # Connect to the database.
 <<< connect(kwmo) >>>
 
-<<< isnotable(kwmo_fix_table), print(Creating the 'workspace' table) >>>
+<<< isnotable(workspace), print(Creating the 'workspace' table) >>>
 
 # Auto-generated dump of kwmo models by model_dump.py
 CREATE TABLE workspace (
