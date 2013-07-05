@@ -25,7 +25,3 @@ CREATE TABLE kwmo_fix_table (
 INSERT INTO kwmo_fix_table (name) VALUES ('invitation_rework');
 INSERT INTO kwmo_fix_table (name) VALUES ('update-1.8');
 INSERT INTO kwmo_fix_table (name) VALUES ('update-1.9');
-
-# Create model tables.
-<<< isnotable(workspace), print(Creating model tables in kwmo database.) >>>
-

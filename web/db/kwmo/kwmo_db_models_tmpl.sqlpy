@@ -1,3 +1,19 @@
+<<< isset(drop), isdb(kwmo), print(Dropping database KWMO.), dropdb(kwmo) >>>
+
+# Exit if we don't need to create database.
+<<< isnotset(create), exit() >>>
+
+# Create database if needed.
+<<< isnodb(kwmo), print(Creating database kwmo.), createdb(kwmo) >>>
+
+# Exit if we don't need to create the schema.
+<<< isset(noschema), exit() >>>
+
+# Connect to the database.
+<<< connect(kwmo) >>>
+
+<<< isnotable(workspace), print(Creating the 'workspace' table) >>>
+
 # Auto-generated dump of kwmo models by model_dump.py
 CREATE TABLE workspace (
 	id BIGINT NOT NULL, 
@@ -19,6 +35,8 @@ CREATE TABLE workspace (
 	evt_skurl_id BIGINT, 
 	PRIMARY KEY (id)
 );
+
+<<< isnotable(kfsnode), print(Creating the 'kfsnode' table) >>>
 
 CREATE TABLE kfsnode (
 	inode_id BIGINT NOT NULL, 
@@ -49,6 +67,8 @@ CREATE INDEX ix_kfsnode_parent_share_id ON kfsnode (parent_share_id);
 
 CREATE INDEX ix_kfsnode_workspace_id ON kfsnode (workspace_id);
 
+<<< isnotable(user), print(Creating the 'user' table) >>>
+
 CREATE TABLE "user" (
 	id INTEGER NOT NULL, 
 	workspace_id BIGINT NOT NULL, 
@@ -68,6 +88,8 @@ CREATE TABLE "user" (
 
 CREATE INDEX ix_user_workspace_id ON "user" (workspace_id);
 
+<<< isnotable(wsrequest), print(Creating the 'wsrequest' table) >>>
+
 CREATE TABLE wsrequest (
 	workspace_id BIGINT NOT NULL, 
 	request_id BIGINT NOT NULL, 
@@ -80,6 +102,8 @@ CREATE TABLE wsrequest (
 );
 
 CREATE INDEX ix_wsrequest_workspace_id ON wsrequest (workspace_id);
+
+<<< isnotable(chatrequest), print(Creating the 'chatrequest' table) >>>
 
 CREATE TABLE chatrequest (
 	workspace_id BIGINT NOT NULL, 
@@ -97,6 +121,8 @@ CREATE TABLE chatrequest (
 
 CREATE INDEX ix_chatrequest_workspace_id ON chatrequest (workspace_id);
 
+<<< isnotable(chatmessage), print(Creating the 'chatmessage' table) >>>
+
 CREATE TABLE chatmessage (
 	workspace_id BIGINT NOT NULL, 
 	evt_id BIGINT NOT NULL, 
@@ -111,6 +137,8 @@ CREATE TABLE chatmessage (
 
 CREATE INDEX ix_chatmessage_workspace_id ON chatmessage (workspace_id);
 
+<<< isnotable(vncsession), print(Creating the 'vncsession' table) >>>
+
 CREATE TABLE vncsession (
 	workspace_id BIGINT NOT NULL, 
 	session_id BIGINT NOT NULL, 
@@ -124,6 +152,8 @@ CREATE TABLE vncsession (
 );
 
 CREATE INDEX ix_vncsession_workspace_id ON vncsession (workspace_id);
+
+<<< isnotable(kfsuploadstatus), print(Creating the 'kfsuploadstatus' table) >>>
 
 CREATE TABLE kfsuploadstatus (
 	client_random_id INTEGER NOT NULL, 

@@ -1,3 +1,19 @@
+# Hey, Emacs! This is a -*- Python -*- file!
+#
+# Copyright (C) 2006-2012 Opersys inc.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 ###########################################################################
 ### INITIALIZE ############################################################
 ###########################################################################
@@ -312,6 +328,7 @@ def get_build_list(build_flag, install_flag):
 
         if install_flag:
                 build_list.append(SConscript("python/SConscript", exports = 'BUILD_ENV opts_dict'))
+                build_list.append(SConscript("web/SConscript", exports = 'BUILD_ENV opts_dict'))
 	
 	return build_list
 
@@ -337,7 +354,9 @@ opts.AddOptions	(
 		('BINDIR', 'Executable path', '/bin'),
 		('PGPKGLIBDIR', 'Postgresql library path', '/usr/lib/postgresql/9.1/lib'),
                 ('CONFIG_PATH', 'Configuration path', '/etc/teambox'),
-                ('PYTHONDIR', 'Directory where Python files are installed', '/usr/share/teambox/python')
+                ('PYTHONDIR', 'Directory where Python files are installed', '/usr/share/teambox/python'),
+                ('WWWDIR', 'Root directory of the web applications', '/usr/share/teambox/www'),
+                ('VIRTUALENV', 'Path to the Python virtual environment made externally for the Python-based components.', '/usr/share/teambox/virtualenv')
 		)
 		
 opts.Update(opts_env)
