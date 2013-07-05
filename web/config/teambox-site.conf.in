@@ -1,4 +1,4 @@
-WSGIPythonPath $VIRTUALENV/lib/python2.6/site-packages/:$PYTHONDIR
+WSGIPythonPath $VIRTUALENV/lib/python2.7/site-packages/:$PYTHONDIR
 WSGIPythonHome $VIRTUALENV
 
 <VirtualHost 0.0.0.0:80>
