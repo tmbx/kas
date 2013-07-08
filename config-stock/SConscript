@@ -24,8 +24,8 @@ installs = []
 BUILD_ENV.Substfile("kcd.ini.in",
                     SUBST_DICT = {'\$HOSTNAME': socket.gethostname(),
                                   '\$PREFIX': opts_dict['DESTDIR']})
-installs = BUILD_ENV.Install(source = "kcd.ini", 
-                             target = Dir(os.path.join(opts_dict['CONFIG_PATH'], "kcd")))
+installs += BUILD_ENV.Install(source = "kcd.ini", 
+                              target = Dir(os.path.join(opts_dict['CONFIG_PATH'], "kcd")))
 
 BUILD_ENV.Substfile("kfs.ini.in", SUBST_DICT = {})
 installs += BUILD_ENV.Install(source = "kfs.ini",
