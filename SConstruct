@@ -327,8 +327,12 @@ def get_build_list(build_flag, install_flag):
 	    if install_flag: build_list.append(AlwaysBuild(BUILD_ENV.Install(BINDIR, source=t)))
 
         if install_flag:
-                build_list.append(SConscript("python/SConscript", exports = 'BUILD_ENV opts_dict'))
-                build_list.append(SConscript("web/SConscript", exports = 'BUILD_ENV opts_dict'))
+                build_list.append(SConscript("python/SConscript", 
+                                             exports = 'BUILD_ENV opts_dict'))
+                build_list.append(SConscript("web/SConscript", 
+                                             exports = 'BUILD_ENV opts_dict'))
+                build_list.append(SConscript("config-stock/SConscript", 
+                                             exports = "BUILD_ENV opts_dict"))
 	
 	return build_list
 

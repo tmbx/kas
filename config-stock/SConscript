@@ -1,0 +1,38 @@
+# Hey, Emacs! This is a -*- Python -*- file!
+#
+# Copyright (C) 2006-2012 Opersys inc.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import os, socket
+Import('BUILD_ENV opts_dict')
+
+# Copy the configuration files
+
+installs = []
+
+BUILD_ENV.Substfile("kcd.ini.in",
+                    SUBST_DICT = {'\$HOSTNAME': socket.gethostname(),
+                                  '\$PREFIX': opts_dict['DESTDIR']})
+installs = BUILD_ENV.Install(source = "kcd.ini", 
+                             target = Dir(os.path.join(opts_dict['CONFIG_PATH'], "kcd")))
+
+BUILD_ENV.Substfile("kfs.ini.in", SUBST_DICT = {})
+installs += BUILD_ENV.Install(source = "kfs.ini",
+                              target = Dir(os.path.join(opts_dict['CONFIG_PATH'], "kcd")))
+
+BUILD_ENV.Substfile("master.cfg.in", SUBST_DICT = {})
+installs += BUILD_ENV.Install(source = "master.cfg",
+                              target = Dir(os.path.join(opts_dict['CONFIG_PATH'], "base")))
+
+Return("installs")
