@@ -21,18 +21,24 @@ Import('BUILD_ENV opts_dict')
 
 installs = []
 
-BUILD_ENV.Substfile("kcd.ini.in",
-                    SUBST_DICT = {'\$HOSTNAME': socket.gethostname(),
-                                  '\$PREFIX': opts_dict['DESTDIR']})
-installs += BUILD_ENV.Install(source = "kcd.ini", 
-                              target = Dir(os.path.join(opts_dict['CONFIG_PATH'], "kcd")))
+sf_env = BUILD_ENV.Clone()
+sf_env.Append(PREFIX = opts_dict['DESTDIR'])
+sf_env['LINESEPARATOR'] = os.linesep
 
-BUILD_ENV.Substfile("kfs.ini.in", SUBST_DICT = {})
-installs += BUILD_ENV.Install(source = "kfs.ini",
-                              target = Dir(os.path.join(opts_dict['CONFIG_PATH'], "kcd")))
+sf_env.Substfile("kcd.ini.in",
+                 SUBST_DICT = {'\$HOSTNAME': socket.gethostname(),
+                               '\$PREFIX': opts_dict['DESTDIR']})
+installs += sf_env.Install(source = "kcd.ini", 
+                           target = Dir(os.path.join(opts_dict['CONFIG_PATH'], "kcd")))
 
-BUILD_ENV.Substfile("master.cfg.in", SUBST_DICT = {})
-installs += BUILD_ENV.Install(source = "master.cfg",
-                              target = Dir(os.path.join(opts_dict['CONFIG_PATH'], "base")))
+sf_env.Substfile("kfs.ini.in", 
+                 SUBST_DICT = {})
+installs += sf_env.Install(source = "kfs.ini",
+                           target = Dir(os.path.join(opts_dict['CONFIG_PATH'], "kcd")))
+
+sf_env.Substfile("master.cfg.in", 
+                 SUBST_DICT = {})
+installs += sf_env.Install(source = "master.cfg",
+                           target = Dir(os.path.join(opts_dict['CONFIG_PATH'], "base")))
 
 Return("installs")
