@@ -378,9 +378,6 @@ DESTDIR = os.path.normpath(opts_dict['DESTDIR'])
 BINDIR = os.path.normpath(opts_dict['DESTDIR'] + "/" + opts_dict['BINDIR'])
 PGPKGLIBDIR = os.path.normpath(opts_dict['DESTDIR'] + "/" + opts_dict['PGPKGLIBDIR'])
 
-# Set that in the opts_dict since we use that in SConscript elsewhere.
-opts_dict['BINDIR'] = BINDIR
-
 ### Update the options values and save.
 if not os.path.isdir('build/'):
     os.mkdir('build/')
