@@ -15,7 +15,7 @@
 # limitations under the License.
 
 import os
-Import('BUILD_ENV opts_dict')
+Import('BUILD_ENV opts_dict BINDIR')
 
 python_FILES = [
     'kanp.py',
@@ -36,15 +36,15 @@ python_PROGS = [
 
 installs = []
 
-for pf in python_FILES:
-    installs.append(BUILD_ENV.Install(dir = Dir(opts_dict['PYTHONDIR']), 
-                                      target = pf))
-
 # Predefine LINESEPARATOR or Textfile will choke.
 tf_env = BUILD_ENV.Clone()
 tf_env.Append(PYTHONDIR = opts_dict['PYTHONDIR'],
               WWWDIR = opts_dict['WWWDIR'])
 tf_env['LINESEPARATOR'] = os.linesep
+
+for pf in python_FILES:
+    installs += tf_env.Install(dir = Dir(opts_dict['PYTHONDIR']), 
+                                      target = pf)
 
 for pyName in python_PROGS:
     shName = os.path.splitext(os.path.basename(pyName))[0]
@@ -54,8 +54,7 @@ for pyName in python_PROGS:
                              "$PYTHONDIR/" + str(pyName) + ' $@'])
     installs += tf_env.Install(target = opts_dict['PYTHONDIR'], 
                                source = pyName)
-    shInst = tf_env.Install(target = opts_dict['BINDIR'], 
-                            source = shName)
+    shInst = tf_env.Install(target = BINDIR, source = shName)
     tf_env.AddPostAction(shInst, Chmod("$TARGET", 0755))
     installs += shInst
 

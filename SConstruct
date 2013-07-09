@@ -328,7 +328,7 @@ def get_build_list(build_flag, install_flag):
 
         if install_flag:
                 build_list.append(SConscript("python/SConscript", 
-                                             exports = 'BUILD_ENV opts_dict'))
+                                             exports = 'BUILD_ENV opts_dict BINDIR'))
                 build_list.append(SConscript("web/SConscript", 
                                              exports = 'BUILD_ENV opts_dict'))
                 build_list.append(SConscript("config-stock/SConscript", 
@@ -377,6 +377,9 @@ KTOOLS_LIB_PATH = opts_dict['libktools_lib']
 DESTDIR = os.path.normpath(opts_dict['DESTDIR'])
 BINDIR = os.path.normpath(opts_dict['DESTDIR'] + "/" + opts_dict['BINDIR'])
 PGPKGLIBDIR = os.path.normpath(opts_dict['DESTDIR'] + "/" + opts_dict['PGPKGLIBDIR'])
+
+# Set that in the opts_dict since we use that in SConscript elsewhere.
+opts_dict['BINDIR'] = BINDIR
 
 ### Update the options values and save.
 if not os.path.isdir('build/'):
