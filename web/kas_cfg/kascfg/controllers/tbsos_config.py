@@ -74,5 +74,5 @@ class TbsosConfigController(AbstractKasConfigController):
         host = host.split(':')[0]
 
         # Redirect to that interafce.
-        return redirect_to('https://'+host+':9000')
+        return redirect('https://'+host+':9000')
 
