@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import getopt, syslog, ConfigParser, os
-from pyPgSQL import PgSQL
+import psycopg2 as PgSQL
 
 # from kpython
 from kprompt import *
