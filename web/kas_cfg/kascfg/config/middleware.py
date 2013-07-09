@@ -13,17 +13,6 @@ from traceback import format_exc
 
 from kascfg.config.environment import load_environment
 
-# Middleware used for debugging.
-class TeamboxDebugMiddleware:
-    def __init__(self, application):
-        self.application = application
-
-    def __call__(self, environ, start_response):
-        try: return self.application(environ, start_response)
-        except:
-            start_response('200 OK', [('Content-Type','text/html')])
-            return [str(render_mako("trace.mako", { "trace" : format_exc(50) }))]
-
 # Middleware used to set the url scheme.
 class UrlSchemeMiddleware:
     def __init__(self, application, url_scheme):
@@ -67,12 +56,9 @@ def make_app(global_conf, full_stack=True, static_files=True, **app_conf):
     app = RoutesMiddleware(app, config['routes.map'])
     app = SessionMiddleware(app, config)
     app = CacheMiddleware(app, config)
-
-    # Teambox debugging.
-    if config['debug']: app = TeamboxDebugMiddleware(app)
         
     # Production setup.
-    else: app = ErrorHandler(app, global_conf, **config['pylons.errorware'])
+    app = ErrorHandler(app, global_conf, **config['pylons.errorware'])
     
     # Handle special status codes.
     app = StatusCodeRedirect(app, [400, 401, 403, 404, 500])
