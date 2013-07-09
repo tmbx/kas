@@ -9,9 +9,10 @@ from kout import *
 from kpg import *
 from kanp import *
 import ConfigParser, getopt, shutil
+from config import CONF_DIR
 
 # Path to the kfs.ini file.
-kfs_ini_path="/etc/teambox/kcd/kfs.ini"
+kfs_ini_path=os.path.join(CONF_DIR, "kcd/kfs.ini")
 
 # Global configuration object.
 admin_conf = None
