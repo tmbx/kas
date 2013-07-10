@@ -184,6 +184,17 @@ class JSONErrorMiddleware:
             start_response(status, response_headers)
             return simplejson.dumps({'type' : e.type, 'exception' : e.exception, 'trace' : e.trace})
 
+# Middleware used for debugging.
+class TeamboxDebugMiddleware:
+    def __init__(self, application):
+        self.application = application
+
+    def __call__(self, environ, start_response):
+        try: return self.application(environ, start_response)
+        except:
+            start_response('200 OK', [('Content-Type','text/html')])
+            return [str(render_mako("trace.mako", { "trace" : format_exc(50) }))]
+
 
 # Middleware used to set the url scheme.
 class UrlSchemeMiddleware:

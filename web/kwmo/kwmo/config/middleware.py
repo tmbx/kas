@@ -58,9 +58,12 @@ def make_app(global_conf, full_stack=True, static_files=True, **app_conf):
 
     # Catch KJsonifyException exceptions and send a json exception in the body.
     app = kwmo.lib.middlewares.JSONErrorMiddleware(app)
+
+    # Teambox debugging.
+    if config['debug']: app = kwmo.lib.middlewares.TeamboxDebugMiddleware(app)
         
     # Production setup.
-    app = ErrorHandler(app, global_conf, **config['pylons.errorware'])
+    else: app = ErrorHandler(app, global_conf, **config['pylons.errorware'])
     
     # Handle special status codes.
     app = StatusCodeRedirect(app, [400, 401, 403, 404, 500])
