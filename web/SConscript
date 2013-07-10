@@ -71,7 +71,16 @@ cfg_freemium = tf_env.Textfile(File(os.path.join('freemium', 'teambox_cfg.py')),
                                 "SITE_DIRS=['$WWWDIR/freemium']"])
 
 install_list = staticTree + kas_cfg + freemium + kwmo 
-install_list = install_list + cfg_kas + cfg_kwmo + cfg_freemium
+install_list += cfg_kas + cfg_kwmo + cfg_freemium
+
+common_templates = os.listdir("templates/base")
+for ct in common_templates:
+    for ws_loc in [os.path.join(wwwRoot, "kas_cfg/kascfg/templates"),
+                   os.path.join(wwwRoot, "freemium/freemium/templates"),
+                   os.path.join(wwwRoot, "kwmo/kwmo/templates")]:
+        install_list += BUILD_ENV.Command(os.path.join(ws_loc, ct),
+                                          os.path.join("templates/base", ct),
+                                          Copy("$TARGET", "$SOURCE"))
 
 # More random files to copy.
 random_files = ["cfgcommon.py", "strings_base.py"]
