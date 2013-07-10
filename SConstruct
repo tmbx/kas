@@ -331,8 +331,10 @@ def get_build_list(build_flag, install_flag):
                                              exports = 'BUILD_ENV opts_dict BINDIR'))
                 build_list.append(SConscript("web/SConscript", 
                                              exports = 'BUILD_ENV opts_dict'))
-                build_list.append(SConscript("config-stock/SConscript", 
-                                             exports = "BUILD_ENV opts_dict"))
+                build_list.append(SConscript("config/SConscript", 
+                                             exports = 'BUILD_ENV opts_dict'))
+                build_list.append(SConscript("db/SConscript",
+                                             exports = 'BUILD_ENV opts_dict'))
 	
 	return build_list
 
@@ -360,7 +362,8 @@ opts.AddOptions	(
                 ('CONFIG_PATH', 'Configuration path', '/etc/teambox'),
                 ('PYTHONDIR', 'Directory where Python files are installed', '/usr/share/teambox/python'),
                 ('WWWDIR', 'Root directory of the web applications', '/usr/share/teambox/www'),
-                ('VIRTUALENV', 'Path to the Python virtual environment made externally for the Python-based components.', '/usr/share/teambox/virtualenv')
+                ('VIRTUALENV', 'Path to the Python virtual environment made externally for the Python-based components.', '/usr/share/teambox/virtualenv'),
+                ('DBDIR', 'Directory where to copy the database (.sqlpy) files.', '/usr/share/teambox/db')
 		)
 		
 opts.Update(opts_env)

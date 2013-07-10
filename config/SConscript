@@ -41,4 +41,10 @@ sf_env.Substfile("master.cfg.in",
 installs += sf_env.Install(source = "master.cfg",
                            target = Dir(os.path.join(opts_dict['CONFIG_PATH'], "base")))
 
+tmpl_files = sf_env.Glob("*.tmpl")
+tmpl_target = Dir(os.path.join(opts_dict["CONFIG_PATH"], "kcd/mail"))
+
+for tmpl_file in tmpl_files:
+    installs += sf_env.Install(source = tmpl_file, target = tmpl_target)
+
 Return("installs")

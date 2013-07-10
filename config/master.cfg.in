@@ -4,4 +4,6 @@
  ('kcd_listen_port', 443),
  ('kcd_db_host', ''),
  ('kcd_db_port', 5432),
- ('admin_pwd', 'admin'))
+ ('admin_pwd', 'admin'),
+
+ ('freemium_autoregister', 1))
