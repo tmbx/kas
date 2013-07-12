@@ -8,6 +8,11 @@ web_port=80
 sendmail_path=/usr/sbin/sendmail
 ssl_cert_path=$CONFIG_PATH/kcd/ssl/kcd.crt
 ssl_key_path=$CONFIG_PATH/kcd/ssl/kcd.key
+db_name=kcd
+db_user=kcd
+db_password=replace_this_password
+db_host=localhost
+db_port=5432
 
 [organizations]
 
