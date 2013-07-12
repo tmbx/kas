@@ -88,6 +88,11 @@ static void kdaemon_init() {
     kstr_init(&global_opts.kfs_dir_path);
     kstr_init(&global_opts.sendmail_path);
     kstr_init(&global_opts.mail_sender);
+    kstr_init(&global_opts.db_user);
+    kstr_init(&global_opts.db_password);
+    kstr_init(&global_opts.db_host);
+    kstr_init(&global_opts.db_port);
+    kstr_init(&global_opts.db_name);
 }
 
 static void kdaemon_clean() {
@@ -111,6 +116,11 @@ static void kdaemon_clean() {
     kstr_clean(&global_opts.kfs_dir_path);
     kstr_clean(&global_opts.sendmail_path);
     kstr_clean(&global_opts.mail_sender);
+    kstr_clean(&global_opts.db_user);
+    kstr_clean(&global_opts.db_password);
+    kstr_clean(&global_opts.db_host);
+    kstr_clean(&global_opts.db_port);
+    kstr_clean(&global_opts.db_name);
     
     /* This is technically incorrect (we may be signaled here), but it's no big
      * deal.
@@ -431,6 +441,11 @@ static int kdaemon_parse_kcd_ini() {
         kdaemon_get_ini_str(d, "config:sendmail_path", &global_opts.sendmail_path);
         kdaemon_get_ini_int(d, "config:sendmail_timeout", 10, &global_opts.sendmail_timeout);
         kdaemon_get_ini_str(d, "config:mail_sender", &global_opts.mail_sender);
+        kdaemon_get_ini_str(d, "config:db_user", &global_opts.db_user);
+        kdaemon_get_ini_str(d, "config:db_password", &global_opts.db_password);
+        kdaemon_get_ini_str(d, "config:db_host", &global_opts.db_host);
+        kdaemon_get_ini_str(d, "config:db_port", &global_opts.db_port);
+        kdaemon_get_ini_str(d, "config:db_name", &global_opts.db_name);
         
 	/* Switch '\n' for real newlines. */
         kstr_replace(&global_opts.web_link, "\\n", "\n");

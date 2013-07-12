@@ -93,6 +93,11 @@ struct kdaemon_opts {
     kstr sendmail_path;
     int sendmail_timeout;
     kstr mail_sender;
+    kstr db_user;
+    kstr db_password;
+    kstr db_host;
+    kstr db_port;
+    kstr db_name;
 };
 
 extern struct kdaemon_opts global_opts;

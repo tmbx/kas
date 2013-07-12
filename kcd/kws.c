@@ -749,11 +749,18 @@ static int kcd_kws_evt_process_db_notif(struct kcd_kws_state *st) {
 static void kcd_kws_evt_main_loop(struct kthread *thread, struct kcd_kws_state *st) {
     int error = 0;
     thread = NULL;
+    kstr conn_str;
 
+    kstr_init(&conn_str);
     kmod_log_msg(KCD_LOG_KWS, "kcd_kws_evt_main_loop() called.\n");
     
     do {
-	error = kcd_open_pg_conn(&st->evt_conn, "dbname=kcd");
+        kstr_sf(&conn_str, "dbname=%s user=%s password=%s host=%s port=%s", 
+                global_opts.db_name.data, global_opts.db_user.data,
+                global_opts.db_password.data, global_opts.db_host.data,
+                global_opts.db_port.data);
+
+	error = kcd_open_pg_conn(&st->evt_conn, conn_str.data);
 	if (error) break;
 
 	while (1) {
@@ -796,6 +803,8 @@ static void kcd_kws_evt_main_loop(struct kthread *thread, struct kcd_kws_state *
     
     } while (0);
     
+    kstr_clean(&conn_str);
+
     if (error) kcd_kws_set_backend_error(st);
 }
 
@@ -1070,10 +1079,12 @@ static void kcd_kws_cmd_main_loop(struct kthread *thread, struct kcd_kws_state *
     krb_tree dispatch_tree;
     karray thread_msg_array;
     struct anp_msg *cmd = NULL;
+    kstr conn_str;
     thread = NULL;
     
     krb_tree_init_func(&dispatch_tree, kutil_uint32_cmp);
     karray_init(&thread_msg_array);
+    kstr_init(&conn_str);
     
     kmod_log_msg(KCD_LOG_KWS, "kcd_kws_cmd_main_loop() called.\n");
     
@@ -1084,7 +1095,12 @@ static void kcd_kws_cmd_main_loop(struct kthread *thread, struct kcd_kws_state *
     }
     
     do {
-	error = kcd_open_pg_conn(&st->cmd_conn, "dbname=kcd");
+        kstr_sf(&conn_str, "dbname=%s user=%s password=%s host=%s port=%s", 
+                global_opts.db_name.data, global_opts.db_user.data,
+                global_opts.db_password.data, global_opts.db_host.data,
+                global_opts.db_port.data);
+
+	error = kcd_open_pg_conn(&st->cmd_conn, conn_str.data);
 	if (error) break;
 
 	while (1) {
@@ -1160,6 +1176,7 @@ static void kcd_kws_cmd_main_loop(struct kthread *thread, struct kcd_kws_state *
     krb_tree_clean(&dispatch_tree);
     kcd_kws_clear_thread_msg_array(&thread_msg_array, 1);
     anp_msg_destroy(cmd);
+    kstr_clean(&conn_str);
     
     if (error) kcd_kws_set_backend_error(st);
 }
