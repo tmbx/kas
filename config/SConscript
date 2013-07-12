@@ -27,7 +27,8 @@ sf_env['LINESEPARATOR'] = os.linesep
 
 sf_env.Substfile("kcd.ini.in",
                  SUBST_DICT = {'\$HOSTNAME': socket.gethostname(),
-                               '\$PREFIX': opts_dict['DESTDIR']})
+                               '\$PREFIX': opts_dict['DESTDIR'],
+                               '\$CONFIG_PATH': opts_dict['CONFIG_PATH']})
 installs += sf_env.Install(source = "kcd.ini", 
                            target = Dir(os.path.join(opts_dict['CONFIG_PATH'], "kcd")))
 

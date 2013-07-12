@@ -6,6 +6,8 @@ kmod_binary_path=$PREFIX/bin/kmod
 web_host=$HOSTNAME
 web_port=80
 sendmail_path=/usr/sbin/sendmail
+ssl_cert_path=$CONFIG_PATH/kcd/ssl/kcd.crt
+ssl_key_path=$CONFIG_PATH/kcd/ssl/kcd.key
 
 [organizations]
 
