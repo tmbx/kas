@@ -1760,7 +1760,7 @@ static int kcd_notif_attempt_connect(struct kcd_notif_state *st) {
                 global_opts.db_password.data, global_opts.db_host.data,
                 global_opts.db_port.data);
 
-        error = kcd_open_pg_conn(&st->conn, "dbname=kcd password=kcd username=kcd");
+        error = kcd_open_pg_conn(&st->conn, conn_str.data);
         if (error) break;
 
         /* Freeze the database state. */
