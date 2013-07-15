@@ -60,18 +60,30 @@ tf_env.Append(PYTHONDIR = opts_dict['PYTHONDIR'],
 tf_env['LINESEPARATOR'] = os.linesep
 
 # Install the platform configuration file for the web app.
-cfg_kas = tf_env.Textfile(File(os.path.join('kas_cfg', 'teambox_cfg.py')),
+cfg_kas = tf_env.Textfile('kas_cfg/teambox_cfg.py',
                           ["SYS_PATHS=['$PYTHONDIR']",
                            "SITE_DIRS=['$WWWDIR/kas_cfg']"])
-cfg_kwmo = tf_env.Textfile(File(os.path.join('kwmo', 'teambox_cfg.py')),
+cfg_kwmo = tf_env.Textfile('kwmo/teambox_cfg.py',
                            ["SYS_PATHS=['$PYTHONDIR\']",
                             "SITE_DIRS=['$WWWDIR/kwmo']"])
-cfg_freemium = tf_env.Textfile(File(os.path.join('freemium', 'teambox_cfg.py')),
+cfg_freemium = tf_env.Textfile('freemium/teambox_cfg.py',
                                ["SYS_PATHS=['$PYTHONDIR']",
                                 "SITE_DIRS=['$WWWDIR/freemium']"])
 
+# Production.ini configuration files. Nothing to substitute in those
+# just yet.
+ini_kwmo = tf_env.Substfile('config/kwmo_production.ini.in',
+                            SUBST_DICT = {})
+ini_kwmo_inst = tf_env.InstallAs(source = ini_kwmo,
+                                 target = os.path.join(opts_dict['WWWDIR'], 'kwmo/production.ini'))
+ini_freemium = tf_env.Substfile('config/freemium_production.ini.in',
+                                SUBST_DICT = {})
+ini_freemium_inst = tf_env.InstallAs(source = ini_freemium,
+                                     target = os.path.join(opts_dict['WWWDIR'], 'freemium/production.ini'))
+
 install_list = staticTree + kas_cfg + freemium + kwmo 
 install_list += cfg_kas + cfg_kwmo + cfg_freemium
+install_list += ini_freemium_inst + ini_kwmo_inst
 
 common_templates = os.listdir("templates/base")
 for ct in common_templates:
@@ -85,8 +97,8 @@ for ct in common_templates:
 # More random files to copy.
 random_files = ["cfgcommon.py", "strings_base.py"]
 for rf in random_files:
-    rfSrc = os.path.join("python", "base", rf)
-    rfTrg = os.path.join(opts_dict['PYTHONDIR'])
+    rfSrc = os.path.join("python/base", rf)
+    rfTrg = opts_dict['PYTHONDIR']
     install_list = install_list + BUILD_ENV.Install(source = rfSrc, target = rfTrg)
 
 # The Apache configurationye
