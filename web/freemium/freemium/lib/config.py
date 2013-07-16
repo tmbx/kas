@@ -6,6 +6,8 @@ import os, logging, threading
 
 log = logging.getLogger(__name__)
 
+from pylons import config
+
 # from kpython
 from kbase import PropStore
 from krun import get_cmd_output
@@ -79,11 +81,11 @@ def detect_cached_config_change(callback, path=default_master_file_path):
 
 # Get local database url.
 def get_local_db_url():
-    freemium_db_user = _config_cache.freemium_db_user
-    freemium_db_pwd = _config_cache.freemium_db_pwd
-    freemium_db_host = _config_cache.freemium_db_host
-    freemium_db_port = _config_cache.freemium_db_port
-    freemium_db_name = _config_cache.freemium_db_name
+    freemium_db_user = config['freemium_db_user']
+    freemium_db_pwd = config['freemium_db_pwd']
+    freemium_db_host = config['freemium_db_host']
+    freemium_db_port = config['freemium_db_port']
+    freemium_db_name = config['freemium_db_name']
     url = 'postgres://%s:%s@%s:%s/%s' % \
         (freemium_db_user, freemium_db_pwd, freemium_db_host, freemium_db_port, freemium_db_name)
     return url

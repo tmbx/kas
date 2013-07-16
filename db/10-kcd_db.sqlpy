@@ -45,16 +45,17 @@
 # Exit if we don't need to create the database.
 <<< isnotset(create), exit() >>>
 
-# Create the database role
-<<< isrole(kcd), print(Creating database role kcd) >>>
-CREATE ROLE kcd;
-GRANT ALL ON DATABASE kcd TO kcd;
-
 # Create the database if required.
 <<< isnodb(kcd), print(Creating database KCD.), createdb(kcd) >>>
 
 # Exit if we don't need to create the schema.
 <<< isset(noschema), exit() >>>
+
+# Create the database role
+<<< isnorole(kcd), print(Creating database role kcd) >>>
+CREATE ROLE kcd LOGIN;
+GRANT ALL ON DATABASE kcd TO kcd;
+SELECT grant_to_all_tables('kcd', 'all');
 
 # Connect to the database.
 <<< connect(kcd) >>>
