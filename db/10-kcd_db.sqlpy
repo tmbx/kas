@@ -56,6 +56,7 @@
 CREATE ROLE kcd LOGIN;
 GRANT ALL ON DATABASE kcd TO kcd;
 SELECT grant_to_all_tables('kcd', 'all');
+SELECT grant_to_all_sequences('kcd', 'usage');
 
 # Connect to the database.
 <<< connect(kcd) >>>

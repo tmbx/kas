@@ -18,6 +18,7 @@
 CREATE ROLE kwmo LOGIN;
 GRANT ALL ON DATABASE kwmo TO kwmo;
 SELECT grant_to_all_tables('kwmo', 'all');
+SELECT grant_to_all_sequences('kwmo', 'usage');
 
 # Create fixes table and insert fixes that must be ignored.
 <<< isnotable(kwmo_fix_table), print(Creating fixes table in kwmo database.) >>>

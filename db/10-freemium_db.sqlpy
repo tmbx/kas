@@ -18,6 +18,7 @@
 CREATE ROLE freemium LOGIN;
 GRANT ALL ON DATABASE freemium TO freemium;
 SELECT grant_to_all_tables('freemium', 'all');
+SELECT grant_to_all_sequences('freemium', 'usage');
 
 # Create the Freemium fix table if required.
 <<< isnotable(freemium_fix_table), print(Creating Freemium fix table.) >>>
