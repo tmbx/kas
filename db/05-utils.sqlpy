@@ -10,7 +10,7 @@ declare
   rights alias for $2;
 begin
   for tbl in select * from information_schema.tables where table_schema = 'public' loop
-    execute 'grant '|| tbl_rights ||' on table '|| tbl.table_name ||' to '|| usr;
+    execute 'grant '|| rights ||' on table '|| tbl.table_name ||' to '|| usr;
   end loop;
 end
 $$ language plpgsql;
