@@ -1,4 +1,4 @@
 [config]
 kfs_mode=local
-kfs_dir=/tmp/kfs
+kfs_dir=/var/cache/teambox/kfs
 default_kfs_quota=500
