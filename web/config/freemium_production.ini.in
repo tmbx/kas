@@ -27,7 +27,7 @@ freemium_db_name = freemium
 
 # RPC url and credentials
 # FIXME hard-coded xmlrpc url
-rpc_url = https://localhost:9000/kpsapi/tbsos-xmlrpc.py
+rpc_url = http://localhost/api/api.py
 rpc_login = freemium
 rpc_password = hard-coded-pass
 
