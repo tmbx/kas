@@ -480,6 +480,10 @@ class RootConfigNode(AbstractConfigNode):
     
     prop_set.add_prop('kcd_db_host', '', "Host running the KCD database.")
 
+    prop_set.add_prop('kcd_db_user', 'kcd', "Username used to access the KCD database.")
+
+    prop_set.add_prop('kcd_db_pwd', 'kcd', "Password for authentication to the KCD database.")
+
     prop_set.add_prop('kcd_db_port', 5432,
                       "Port on which the KCD database is running on kcd_db_host")
 
