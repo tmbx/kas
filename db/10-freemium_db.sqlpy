@@ -16,9 +16,6 @@
 # Create the freemium user
 <<< isnorole(freemium), print(Creating database role freemium) >>>
 CREATE ROLE freemium LOGIN;
-GRANT ALL ON DATABASE freemium TO freemium;
-SELECT grant_to_all_tables('freemium', 'all');
-SELECT grant_to_all_sequences('freemium', 'usage');
 
 # Create the Freemium fix table if required.
 <<< isnotable(freemium_fix_table), print(Creating Freemium fix table.) >>>
@@ -50,3 +47,6 @@ CREATE TABLE freemium_users (
 -- Insert the applied fixes.
 INSERT INTO freemium_fix_table (name) VALUES ('update-2.1');
 
+GRANT ALL ON DATABASE freemium TO freemium;
+SELECT grant_to_all_tables('freemium', 'all');
+SELECT grant_to_all_sequences('freemium', 'usage');
