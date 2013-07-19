@@ -98,6 +98,7 @@ struct kdaemon_opts {
     kstr db_host;
     kstr db_port;
     kstr db_name;
+    kstr catchall_tbx;
 };
 
 extern struct kdaemon_opts global_opts;

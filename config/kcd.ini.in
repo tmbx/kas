@@ -13,6 +13,7 @@ db_user=kcd
 db_password=replace_this_password
 db_host=localhost
 db_port=5432
+catchall_tbx=$HOSTNAME
 
 [organizations]
 
