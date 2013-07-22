@@ -54,7 +54,8 @@ kwmo = InstallTree('kwmo', wwwRoot)
 
 tf_env = BUILD_ENV.Clone()
 tf_env.Append(PYTHONDIR = opts_dict['PYTHONDIR'],
-              WWWDIR = opts_dict['WWWDIR'])
+              WWWDIR = opts_dict['WWWDIR'],
+              VIRTUALENV = opts_dict['VIRTUALENV'])
 
 # Predefine LINESEPARATOR or Textfile will choke.
 tf_env['LINESEPARATOR'] = os.linesep
@@ -95,13 +96,15 @@ for ct in common_templates:
                                           Copy("$TARGET", "$SOURCE"))
 
 # Kwsfetcher is a daemon going straight to the bin directory.
-BUILD_ENV['LINESEPARATOR'] = os.linesep
-install_list += BUILD_ENV.Install(source = File("python/kwmo/kwsfetcher.py"),
+tf_env['KWMO_PATH'] = os.path.join(wwwRoot, "kwmo");
+install_list += tf_env.Install(source = File("python/kwmo/kwsfetcher.py"),
                                   target = os.path.join(opts_dict['PYTHONDIR']))
-install_list += BUILD_ENV.Textfile(target = os.path.join(opts_dict['DESTDIR'], opts_dict['BINDIR'], "kwsfetcher"), 
-                                   source = ["#!/bin/sh",
-                                             "export PYTHONPATH=$PYTHONDIR",
-                                             "$PYTHONDIR/" + "kwsfetcher.py" + ' $@'])
+install_list += tf_env.Textfile(target = os.path.join(opts_dict['DESTDIR'], opts_dict['BINDIR'], "kwsfetcher"), 
+                                source = ["#!/bin/sh",
+                                          "export KWMO_PATH=$KWMO_PATH",
+                                          "export VIRTUALENV=$VIRTUALENV",
+                                          "export PYTHONPATH=$PYTHONDIR",
+                                          "$PYTHONDIR/" + "kwsfetcher.py" + ' $@'])
 
 # More random files to copy.
 random_files = ["cfgcommon.py", "strings_base.py"]
