@@ -2,7 +2,7 @@
  ('kcd_listen_addr', '127.0.0.1'),
  ('kcd_host', '0.0.0.0'),
  ('kcd_listen_port', 443),
- ('kcd_db_host', ''),
+ ('kcd_db_host', 'localhost'),
  ('kcd_db_port', 5432),
  ('admin_pwd', 'admin'),
 
