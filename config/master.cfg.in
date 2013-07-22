@@ -4,6 +4,8 @@
  ('kcd_listen_port', 443),
  ('kcd_db_host', 'localhost'),
  ('kcd_db_port', 5432),
+ ('kcd_db_user', 'kcd'),
+ ('kcd_db_pwd', 'kcd_replace_this_password'),
  ('admin_pwd', 'admin'),
 
  ('freemium_autoregister', 1))
