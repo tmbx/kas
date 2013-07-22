@@ -94,6 +94,10 @@ for ct in common_templates:
                                           os.path.join("templates/base", ct),
                                           Copy("$TARGET", "$SOURCE"))
 
+# Kwsfetcher is a daemon going straight to the bin directory.
+install_list += BUILD_ENV.Install(source = File("python/kwmo/kwsfetcher"),
+                                  target = Dir(os.path.join(opts_dict['DESTDIR'], opts_dict['BINDIR'])))
+
 # More random files to copy.
 random_files = ["cfgcommon.py", "strings_base.py"]
 for rf in random_files:
