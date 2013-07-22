@@ -1,0 +1,5 @@
+*.pyc
+cscope.files
+cscope.out
+*.log
+.sconsign.dblite
