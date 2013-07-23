@@ -99,12 +99,14 @@ for ct in common_templates:
 tf_env['KWMO_PATH'] = os.path.join(wwwRoot, "kwmo");
 install_list += tf_env.Install(source = File("python/kwmo/kwsfetcher.py"),
                                   target = os.path.join(opts_dict['PYTHONDIR']))
-install_list += tf_env.Textfile(target = os.path.join(opts_dict['DESTDIR'], opts_dict['BINDIR'], "kwsfetcher"), 
+kwsfetcher_sh = tf_env.Textfile(target = os.path.join(opts_dict['DESTDIR'], opts_dict['BINDIR'], "kwsfetcher"), 
                                 source = ["#!/bin/sh",
                                           "export KWMO_PATH=$KWMO_PATH",
                                           "export VIRTUALENV=$VIRTUALENV",
                                           "export PYTHONPATH=$PYTHONDIR",
                                           "$PYTHONDIR/" + "kwsfetcher.py" + ' $@'])
+tf_env.AddPostAction(kwsfetcher_sh, Chmod("$TARGET", 0755))
+install_list += kwsfetcher_sh
 
 # More random files to copy.
 random_files = ["cfgcommon.py", "strings_base.py"]
