@@ -13,8 +13,7 @@ port = 5000
 use = egg:freemium
 static_files = true
 cache_dir = /tmp/freemium/data
-beaker.session.type = ext:database
-beaker.session.url = postgres:///kwmo?host=/var/run/postgresql/
+beaker.session.type = file
 beaker.session.cookie_expires = False
 beaker.session.key = freemium
 beaker.session.secret = somesecret

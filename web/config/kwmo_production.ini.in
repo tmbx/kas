@@ -13,8 +13,7 @@ port = 5000
 use = egg:kwmo
 static_files = true
 cache_dir = /tmp/kwmo/data
-beaker.session.type = ext:database
-beaker.session.url = postgres:///kwmo?host=/var/run/postgresql/
+beaker.session.type = file
 beaker.session.cookie_expires = False
 beaker.session.key = kwmo
 beaker.session.secret = somesecret
