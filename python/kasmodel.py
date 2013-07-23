@@ -612,8 +612,8 @@ class RootConfigNode(AbstractConfigNode):
     prop_set.add_prop('kcd_knp_mode', 0, "Support KNP in frontend mode.")
     prop_set.add_prop('kcd_http_mode', 0, "Support HTTP in frontend mode.")
     prop_set.add_prop('kcd_vnc_mode', 0, "Support VNC in frontend mode.")
-    prop_set.add_prop('kcd_ssl_cert_path', os.path.join(CONF_DIR, 'base/cert.pem'), "Path to the SSL certificate, if any.")
-    prop_set.add_prop('kcd_ssl_key_path', os.path.join(CONF_DIR, 'base/cert_key.pem'), "Path to the SSL key, if any.")
+    prop_set.add_prop('kcd_ssl_cert_path', os.path.join(CONF_DIR, 'kcd/ssl/kcd.crt'), "Path to the SSL certificate, if any.")
+    prop_set.add_prop('kcd_ssl_key_path', os.path.join(CONF_DIR, 'kcd/ssl/kcd.key'), "Path to the SSL key, if any.")
     
         
     # Miscellaneous information.
