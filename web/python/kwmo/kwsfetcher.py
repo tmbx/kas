@@ -8,9 +8,10 @@ from kpg import exec_pg_query_rb_on_except, exec_pg_select_rb, ntos
 from kfile import first_existing_file
 
 # Paster configuration file.
-paster_config_path = first_existing_file([os.path.join(os.environ['KWMO_PATH'], 'production.ini')])
-    'production.ini',
-    'development.ini'])
+paster_config_path = first_existing_file([
+        os.path.join(os.environ['KWMO_PATH'], 'production.ini')
+        'production.ini',
+        'development.ini'])
 
 # Path for storing kwsfetcher information.
 fetcher_path = "/var/cache/teambox/kwsfetcher"
@@ -22,11 +23,14 @@ tcp_keepalive_intvl = 60
 tcp_keepalive_probes = 5
 
 # Append kwmo application path to python path.
-sys.path.append(os.environ['KMWO_PATH'])
+sys.path.append(os.environ)
 
 # Add site directory (would work with PYTHONPATH but not with sys.path because sys.path does not 
 # handle PTH files).
-site.addsitedir(sys.env['VIRTUALENV'] + sys.version[:3] + '/site-packages')
+site.addsitedir(os.path.join(os.environ['VIRTUALENV']),
+                'lib',
+                'python' + sys.version[:3],
+                'site-packages')
 
 # from system or kpylons
 from sqlalchemy.sql import and_
