@@ -26,11 +26,8 @@ def InstallTree(treeDir, baseDir):
     for s in os.walk(treeDir):
         (base, dirs, files) = s
         for d in dirs:
-            sourceDir = Dir(os.path.join(base, d))
-            targetDir = Dir(os.path.join(baseDir, base))
-            # Don't try to reinstall the directory if it exists.
-            if not os.path.exists(str(targetDir)):
-                install_list.append(BUILD_ENV.Install(targetDir, sourceDir))
+            targetDirPath = os.path.join(baseDir, base)
+            Command(targetDirPath, None, [Mkdir("$TARGET")])
         for f in files:
             (_, ext) = os.path.splitext(f)
             if ext in [".pyc"]:
