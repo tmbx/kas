@@ -61,12 +61,18 @@ tf_env['LINESEPARATOR'] = os.linesep
 cfg_kas = tf_env.Textfile('kas_cfg/teambox_cfg.py',
                           ["SYS_PATHS=['$PYTHONDIR']",
                            "SITE_DIRS=['$WWWDIR/kas_cfg']"])
+inst_cfg_kas = tf_env.Install(source = cfg_kas,
+                              target = os.path.join(opts_dict['WWWDIR'], 'kas_cfg'))
 cfg_kwmo = tf_env.Textfile('kwmo/teambox_cfg.py',
                            ["SYS_PATHS=['$PYTHONDIR\']",
                             "SITE_DIRS=['$WWWDIR/kwmo']"])
+inst_cfg_kwmo = tf_env.Install(source = cfg_kwmo,
+                               target = os.path.join(opts_dict['WWWDIR'], 'kwmo'))
 cfg_freemium = tf_env.Textfile('freemium/teambox_cfg.py',
                                ["SYS_PATHS=['$PYTHONDIR']",
                                 "SITE_DIRS=['$WWWDIR/freemium']"])
+inst_cfg_freemium = tf_env.Install(source = cfg_freemium,
+                                   target = os.path.join(opts_dict['WWWDIR'], 'freemium'))
 
 # Production.ini configuration files. Nothing to substitute in those
 # just yet.
@@ -80,7 +86,7 @@ ini_freemium_inst = tf_env.InstallAs(source = ini_freemium,
                                      target = os.path.join(opts_dict['WWWDIR'], 'freemium/production.ini'))
 
 install_list = staticTree + kas_cfg + freemium + kwmo 
-install_list += cfg_kas + cfg_kwmo + cfg_freemium
+install_list += inst_cfg_kas + inst_cfg_kwmo + inst_cfg_freemium
 install_list += ini_freemium_inst + ini_kwmo_inst
 
 common_templates = os.listdir("templates/base")
