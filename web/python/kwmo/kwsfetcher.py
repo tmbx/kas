@@ -23,7 +23,7 @@ tcp_keepalive_intvl = 60
 tcp_keepalive_probes = 5
 
 # Append kwmo application path to python path.
-sys.path.append(os.environ['KMWO_PATH'])
+sys.path.append(os.environ['KWMO_PATH'])
 
 # Add site directory (would work with PYTHONPATH but not with sys.path because sys.path does not 
 # handle PTH files).
