@@ -107,7 +107,7 @@ kwsfetcher_sh = tf_env.Textfile(target = os.path.join(opts_dict['DESTDIR'], opts
                                           "export KWMO_PATH=$KWMO_PATH",
                                           "export VIRTUALENV=$VIRTUALENV",
                                           "export PYTHONPATH=$PYTHONDIR",
-                                          "$PYTHONDIR/" + "kwsfetcher.py" + ' $@'])
+                                          "python $PYTHONDIR/" + "kwsfetcher.py" + ' $@'])
 tf_env.AddPostAction(kwsfetcher_sh, Chmod("$TARGET", 0755))
 install_list += kwsfetcher_sh
 
