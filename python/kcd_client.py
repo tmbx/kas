@@ -257,7 +257,7 @@ class BaseKcdClient(tcp_client.TcpClient):
         self.select_role(kanp.KANP_KCD_ROLE_WORKSPACE)
 
         # Connect to workspace.
-        self.connect_workspace(workspace_id = int(workspace_id), email_id = email_id, password = self.conf.db_passwd)
+        self.connect_workspace(workspace_id = int(workspace_id), email_id = email_id, password = self.conf.kcd_passwd)
 
         # Send the invitation.
         ws_url, invitees = self.send_invitation(int(workspace_id), message, invitees)
@@ -276,7 +276,7 @@ class BaseKcdClient(tcp_client.TcpClient):
 
         # Connect to workspace.
         self.connect_workspace(workspace_id = int(workspace_id),
-            user_id = user_id, email_id = email_id, password = self.conf.db_passwd)
+            user_id = user_id, email_id = email_id, password = self.conf.kcd_passwd)
 
         # Send the command to KCD.
         am = kanp.ANP_msg()
