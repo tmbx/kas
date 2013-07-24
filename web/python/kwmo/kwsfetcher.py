@@ -9,7 +9,7 @@ from kfile import first_existing_file
 
 # Paster configuration file.
 paster_config_path = first_existing_file([
-        os.path.join(os.environ['KWMO_PATH'], 'production.ini')
+        os.path.join(os.environ['KWMO_PATH'], 'production.ini'),
         'production.ini',
         'development.ini'])
 
@@ -23,14 +23,14 @@ tcp_keepalive_intvl = 60
 tcp_keepalive_probes = 5
 
 # Append kwmo application path to python path.
-sys.path.append(os.environ)
+sys.path.append(os.environ['KMWO_PATH'])
 
 # Add site directory (would work with PYTHONPATH but not with sys.path because sys.path does not 
 # handle PTH files).
-site.addsitedir(os.path.join(os.environ['VIRTUALENV']),
+site.addsitedir(os.path.join(os.environ['VIRTUALENV'],
                 'lib',
                 'python' + sys.version[:3],
-                'site-packages')
+                'site-packages'))
 
 # from system or kpylons
 from sqlalchemy.sql import and_
