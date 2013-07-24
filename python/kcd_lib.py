@@ -67,7 +67,7 @@ def get_kcd_external_conf_object(master_config=None, path=default_master_file_pa
     conf.db_host = master_config.kcd_db_host
     conf.db_port = master_config.kcd_db_port
     conf.db_user = master_config.kcd_db_user
-    conf.db_passwd = master_config.kcd_db_pwd
+    conf.db_passwd = master_config.kcd_pwd
     if conf.db_passwd == None or conf.db_passwd == '': conf.db_passwd = master_config.admin_pwd
 
     # Fill KCD options.
