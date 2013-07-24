@@ -7,5 +7,6 @@
  ('kcd_db_user', 'kcd'),
  ('kcd_db_pwd', 'kcd_replace_this_password'),
  ('admin_pwd', 'admin'),
+ ('kcd_pwd', 'kwd_pwd_replace_this_password'),
 
  ('freemium_autoregister', 1))
