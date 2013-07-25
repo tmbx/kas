@@ -169,3 +169,7 @@ CREATE TABLE kfsuploadstatus (
 );
 
 # End of auto-generated dump
+
+GRANT ALL ON DATABASE kwmo TO kwmo;
+SELECT grant_to_all_tables('kwmo', 'all');
+SELECT grant_to_all_sequences('kwmo', 'usage');

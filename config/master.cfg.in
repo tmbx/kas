@@ -1,0 +1,12 @@
+(('kcd_port', 443),
+ ('kcd_listen_addr', '127.0.0.1'),
+ ('kcd_host', '0.0.0.0'),
+ ('kcd_listen_port', 443),
+ ('kcd_db_host', 'localhost'),
+ ('kcd_db_port', 5432),
+ ('kcd_db_user', 'kcd'),
+ ('kcd_db_pwd', 'kcd_replace_this_password'),
+ ('admin_pwd', 'admin'),
+ ('kcd_pwd', 'kwd_pwd_replace_this_password'),
+
+ ('freemium_autoregister', 1))

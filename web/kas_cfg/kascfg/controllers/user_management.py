@@ -1,7 +1,7 @@
 import logging
 
 from pylons import request, url, config, response, session, tmpl_context as c
-from pylons.controllers.util import abort, redirect_to
+from pylons.controllers.util import abort, redirect
 from routes import url_for
 from kascfg.lib.base import BaseController, render, ui_flash_error
 from kascfg.model.freemium import User
@@ -17,7 +17,7 @@ class UserManagementController(BaseController):
     def show(self):
         if not (c.services['freemium'].configured and c.services['freemium'].enabled):
             # Disallow access.
-            return redirect_to(url_for('status'))
+            return redirect(url_for('status'))
 
         # Return a rendered template
         page = 0
@@ -107,7 +107,7 @@ class UserManagementController(BaseController):
         else:
             ui_flash_error(message="Email address and password fields cannot be blank.")
         
-        redirect_to(url('manage_users', limit = params['limit']))
+        redirect(url('manage_users', limit = params['limit']))
         pass
  
     def apply(self):
@@ -139,7 +139,7 @@ class UserManagementController(BaseController):
                 self.update_users_license(user_ids, license_action)
         
         
-        redirect_to(url('manage_users', page=params['page'], limit=params['limit'], email_criteria=params['email_criteria'], license_criteria=params['license_criteria'], order_by=params['order_by'], order_dir=params['order_dir']))
+        redirect(url('manage_users', page=params['page'], limit=params['limit'], email_criteria=params['email_criteria'], license_criteria=params['license_criteria'], order_by=params['order_by'], order_dir=params['order_dir']))
         pass
         
     # private methods

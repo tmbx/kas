@@ -18,7 +18,7 @@ WSGIPythonHome $VIRTUALENV
     Alias /images/base/             $WWWDIR/kwmo/images/base/
     Alias /applets/base/            $WWWDIR/kwmo/applets/base/
     Alias /css/base/                $WWWDIR/kwmo/css/base/
-    Alias /javascripts/base/        $WWWDIR/javascripts/base/
+    Alias /javascripts/base/        $WWWDIR/www/javascripts/base/
     Alias /html/base/               $WWWDIR/html/base/
 
     Alias /images/                  $WWWDIR/kwmo/kwmo/public/images/
@@ -30,7 +30,7 @@ WSGIPythonHome $VIRTUALENV
     Alias /kascfg/images/base/	    $WWWDIR/images/base/
     Alias /kascfg/applets/base/     $WWWDIR/applets/base/
     Alias /kascfg/css/base/ 	    $WWWDIR/css/base/
-    Alias /kascfg/javascripts/base/ $WWWDIR/javascripts/base/
+    Alias /kascfg/javascripts/base/ $WWWDIR/www/javascripts/base/
     Alias /kascfg/html/base/ 	    $WWWDIR/html/base/
 
     Alias /kascfg/images/	    $WWWDIR/kas_cfg/kascfg/public/images/

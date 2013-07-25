@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import getopt, syslog, ConfigParser, os
-from pyPgSQL import PgSQL
+import psycopg2 as PgSQL
 
 # from kpython
 from kprompt import *
@@ -438,7 +438,7 @@ class KcdShell:
             if dry_run_flag: continue
             
             # Log in the workspace.
-            c.connect_workspace(workspace_id=kws_id, email_id="kwmo", password=c.conf.db_passwd)
+            c.connect_workspace(workspace_id=kws_id, email_id="kwmo", password=c.conf.kcd_passwd)
             
             # Send the invitation.
             msg = "This email was sent automatically to give you access to your Teambox.\n"

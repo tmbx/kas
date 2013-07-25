@@ -26,11 +26,8 @@ def InstallTree(treeDir, baseDir):
     for s in os.walk(treeDir):
         (base, dirs, files) = s
         for d in dirs:
-            sourceDir = Dir(os.path.join(base, d))
-            targetDir = Dir(os.path.join(baseDir, base))
-            # Don't try to reinstall the directory if it exists.
-            if not os.path.exists(str(targetDir)):
-                install_list.append(BUILD_ENV.Install(targetDir, sourceDir))
+            targetDirPath = os.path.join(baseDir, base)
+            Command(targetDirPath, None, [Mkdir("$TARGET")])
         for f in files:
             (_, ext) = os.path.splitext(f)
             if ext in [".pyc"]:
@@ -54,30 +51,71 @@ kwmo = InstallTree('kwmo', wwwRoot)
 
 tf_env = BUILD_ENV.Clone()
 tf_env.Append(PYTHONDIR = opts_dict['PYTHONDIR'],
-              WWWDIR = opts_dict['WWWDIR'])
+              WWWDIR = opts_dict['WWWDIR'],
+              VIRTUALENV = opts_dict['VIRTUALENV'])
 
 # Predefine LINESEPARATOR or Textfile will choke.
 tf_env['LINESEPARATOR'] = os.linesep
 
 # Install the platform configuration file for the web app.
-cfg_kas = tf_env.Textfile(File(os.path.join('kas_cfg', 'teambox_cfg.py')),
+cfg_kas = tf_env.Textfile('kas_cfg/teambox_cfg.py',
                           ["SYS_PATHS=['$PYTHONDIR']",
                            "SITE_DIRS=['$WWWDIR/kas_cfg']"])
-cfg_kwmo = tf_env.Textfile(File(os.path.join('kwmo', 'teambox_cfg.py')),
+inst_cfg_kas = tf_env.Install(source = cfg_kas,
+                              target = os.path.join(opts_dict['WWWDIR'], 'kas_cfg'))
+cfg_kwmo = tf_env.Textfile('kwmo/teambox_cfg.py',
                            ["SYS_PATHS=['$PYTHONDIR\']",
                             "SITE_DIRS=['$WWWDIR/kwmo']"])
-cfg_freemium = tf_env.Textfile(File(os.path.join('freemium', 'teambox_cfg.py')),
+inst_cfg_kwmo = tf_env.Install(source = cfg_kwmo,
+                               target = os.path.join(opts_dict['WWWDIR'], 'kwmo'))
+cfg_freemium = tf_env.Textfile('freemium/teambox_cfg.py',
                                ["SYS_PATHS=['$PYTHONDIR']",
                                 "SITE_DIRS=['$WWWDIR/freemium']"])
+inst_cfg_freemium = tf_env.Install(source = cfg_freemium,
+                                   target = os.path.join(opts_dict['WWWDIR'], 'freemium'))
+
+# Production.ini configuration files. Nothing to substitute in those
+# just yet.
+ini_kwmo = tf_env.Substfile('config/kwmo_production.ini.in',
+                            SUBST_DICT = {})
+ini_kwmo_inst = tf_env.InstallAs(source = ini_kwmo,
+                                 target = os.path.join(opts_dict['WWWDIR'], 'kwmo/production.ini'))
+ini_freemium = tf_env.Substfile('config/freemium_production.ini.in',
+                                SUBST_DICT = {})
+ini_freemium_inst = tf_env.InstallAs(source = ini_freemium,
+                                     target = os.path.join(opts_dict['WWWDIR'], 'freemium/production.ini'))
 
 install_list = staticTree + kas_cfg + freemium + kwmo 
-install_list = install_list + cfg_kas + cfg_kwmo + cfg_freemium
+install_list += inst_cfg_kas + inst_cfg_kwmo + inst_cfg_freemium
+install_list += ini_freemium_inst + ini_kwmo_inst
+
+common_templates = os.listdir("templates/base")
+for ct in common_templates:
+    for ws_loc in [os.path.join(wwwRoot, "kas_cfg/kascfg/templates"),
+                   os.path.join(wwwRoot, "freemium/freemium/templates"),
+                   os.path.join(wwwRoot, "kwmo/kwmo/templates")]:
+        install_list += BUILD_ENV.Command(os.path.join(ws_loc, ct),
+                                          os.path.join("templates/base", ct),
+                                          Copy("$TARGET", "$SOURCE"))
+
+# Kwsfetcher is a daemon going straight to the bin directory.
+tf_env['KWMO_PATH'] = os.path.join(wwwRoot, "kwmo");
+install_list += tf_env.Install(source = File("python/kwmo/kwsfetcher.py"),
+                                  target = os.path.join(opts_dict['PYTHONDIR']))
+kwsfetcher_sh = tf_env.Textfile(target = os.path.join(opts_dict['DESTDIR'], opts_dict['BINDIR'], "kwsfetcher"), 
+                                source = ["#!/bin/sh",
+                                          "export KWMO_PATH=$KWMO_PATH",
+                                          "export VIRTUALENV=$VIRTUALENV",
+                                          "export PYTHONPATH=$PYTHONDIR",
+                                          "python $PYTHONDIR/" + "kwsfetcher.py" + ' $@'])
+tf_env.AddPostAction(kwsfetcher_sh, Chmod("$TARGET", 0755))
+install_list += kwsfetcher_sh
 
 # More random files to copy.
 random_files = ["cfgcommon.py", "strings_base.py"]
 for rf in random_files:
-    rfSrc = os.path.join("python", "base", rf)
-    rfTrg = os.path.join(opts_dict['PYTHONDIR'])
+    rfSrc = os.path.join("python/base", rf)
+    rfTrg = opts_dict['PYTHONDIR']
     install_list = install_list + BUILD_ENV.Install(source = rfSrc, target = rfTrg)
 
 # The Apache configurationye

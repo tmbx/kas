@@ -3,7 +3,7 @@ import logging, time
 
 # from pylons
 from pylons import request, url, session as web_session, tmpl_context as c
-from pylons.controllers.util import abort, redirect_to
+from pylons.controllers.util import abort, redirect
 from routes import url_for
 from kascfg.lib.base import BaseController, render
 from kascfg.lib.config import load_master_config, save_master_config

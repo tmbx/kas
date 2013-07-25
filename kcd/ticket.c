@@ -422,7 +422,9 @@ int kcd_ticket_mode_handle_conn(struct kcd_client *client, uint32_t app) {
     char *task_name = "";
     struct kcd_ticket_mode_dispatch_entry *entry;
     struct kcd_ticket_mode_state st;
+    kstr conn_str;
     
+    kstr_init(&conn_str);
     kcd_ticket_mode_state_init(&st, client);
     
     do {
@@ -441,7 +443,12 @@ int kcd_ticket_mode_handle_conn(struct kcd_client *client, uint32_t app) {
         kmod_log_msg(KCD_LOG_BRIEF, "kcd_ticket_mode_handle_conn() called.\n");
         
         /* Connect to the DB. */
-	error = kcd_open_pg_conn(&st.db_conn, "dbname=kcd");
+        kstr_sf(&conn_str, "dbname=%s user=%s password=%s host=%s port=%s", 
+                global_opts.db_name.data, global_opts.db_user.data,
+                global_opts.db_password.data, global_opts.db_host.data,
+                global_opts.db_port.data);
+
+	error = kcd_open_pg_conn(&st.db_conn, conn_str.data);
 	if (error) break;
         
         /* Receive the initial message. */
@@ -491,6 +498,7 @@ int kcd_ticket_mode_handle_conn(struct kcd_client *client, uint32_t app) {
     assert(error == 0 || error == -1);
     
     kcd_ticket_mode_state_clean(&st);
+    kstr_clean(&conn_str);
     
     return error;
 }

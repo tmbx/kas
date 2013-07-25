@@ -4,6 +4,7 @@ from ksort import *
 from kfile import *
 from krun import *
 from kifconfig import *
+from config import CONF_DIR
 
 # This class represents a service running on a Teambox server.
 class ServerService:
@@ -445,7 +446,7 @@ class NetworkInterfaceConfig(AbstractConfigNode):
 # Represent the root configuration node.
 class RootConfigNode(AbstractConfigNode):
     # Path to the master config file
-    master_file_path = '/etc/teambox/base/master.cfg'
+    master_file_path = os.path.join(CONF_DIR, "base/master.cfg")
 
     prop_set = ConfigPropSet()
     
@@ -479,6 +480,10 @@ class RootConfigNode(AbstractConfigNode):
     
     prop_set.add_prop('kcd_db_host', '', "Host running the KCD database.")
 
+    prop_set.add_prop('kcd_db_user', 'kcd', "Username used to access the KCD database.")
+
+    prop_set.add_prop('kcd_db_pwd', 'kcd', "Password for authentication to the KCD database.")
+
     prop_set.add_prop('kcd_db_port', 5432,
                       "Port on which the KCD database is running on kcd_db_host")
 
@@ -511,7 +516,7 @@ class RootConfigNode(AbstractConfigNode):
         "Path to the KMOD binary. This is used by KCD when it is running in KANP\n"
         + "mode.")
 
-    prop_set.add_prop('kcd_kmod_db_path', "/etc/teambox/kcd/kmod_db", 
+    prop_set.add_prop('kcd_kmod_db_path', os.path.join(CONF_DIR, "kcd/kmod_db"), 
         "Path to the KMOD database. KMOD doesn't actually write in the DB, so it can be\n"
         + "shared among multiple KMOD instances.")
 
@@ -607,8 +612,8 @@ class RootConfigNode(AbstractConfigNode):
     prop_set.add_prop('kcd_knp_mode', 0, "Support KNP in frontend mode.")
     prop_set.add_prop('kcd_http_mode', 0, "Support HTTP in frontend mode.")
     prop_set.add_prop('kcd_vnc_mode', 0, "Support VNC in frontend mode.")
-    prop_set.add_prop('kcd_ssl_cert_path', '/etc/teambox/base/cert.pem', "Path to the SSL certificate, if any.")
-    prop_set.add_prop('kcd_ssl_key_path', '/etc/teambox/base/cert_key.pem', "Path to the SSL key, if any.")
+    prop_set.add_prop('kcd_ssl_cert_path', os.path.join(CONF_DIR, 'kcd/ssl/kcd.crt'), "Path to the SSL certificate, if any.")
+    prop_set.add_prop('kcd_ssl_key_path', os.path.join(CONF_DIR, 'kcd/ssl/kcd.key'), "Path to the SSL key, if any.")
     
         
     # Miscellaneous information.
@@ -650,7 +655,7 @@ class RootConfigNode(AbstractConfigNode):
 
     # Read and return the (major, minor) product version tuple contained in the
     # product version file.
-    def get_product_version_tuple(self, path="/etc/teambox/product_version"):
+    def get_product_version_tuple(self, path=os.path.join(CONF_DIR, "product_version")):
         f = open(path, "rb")
         v = f.readline().strip()
         f.close()
@@ -689,14 +694,14 @@ class RootConfigNode(AbstractConfigNode):
         else: self.admin_pwd = pwd
         
         # Update the password in the administration password file.
-        write_file_atom('/etc/teambox/base/admin_pwd', pwd + "\n")
+        write_file_atom(os.path.join(CONF_DIR, "base/admin_pwd"), pwd + "\n")
         
         # Update the password in postgres.
         get_cmd_output(["psql", "-d", "template1", "-c",
                         "ALTER ROLE external WITH PASSWORD %s" % (escape_string(pwd))])
                         
         # Update the password in tbxsosd.
-        self.change_key_tbxsosd_config("/etc/teambox/tbxsosd/web.conf", "server.password", pwd)
+        self.change_key_tbxsosd_config(os.path.join(CONF_DIR, "tbxsosd/web.conf"), "server.password", pwd)
         
         # Update the password in the master configuration file. Do this last for
         # consistency.
@@ -734,14 +739,14 @@ class RootConfigNode(AbstractConfigNode):
         return BoundIniFile()
     
     # Write configuration to /etc/teambox/tbxsosd/web.conf.
-    def update_tbxsosd_web_conf(self, file_path="/etc/teambox/tbxsosd/web.conf"):
+    def update_tbxsosd_web_conf(self, file_path=os.path.join(CONF_DIR, "tbxsosd/web.conf")):
         self.change_key_tbxsosd_config(file_path, "server.listen_on", "0.0.0.0:5000")
         self.change_key_tbxsosd_config(file_path, "server.ssl_listen_on", "")
         self.change_key_tbxsosd_config(file_path, "server.kas_address", self.kcd_host)
         self.change_key_tbxsosd_config(file_path, "server.kas_port", 443)
         
     # Write configuration to kcd.ini.
-    def write_kcd_ini(self, file_path='/etc/teambox/kcd/kcd.ini'):
+    def write_kcd_ini(self, file_path=os.path.join(CONF_DIR, "kcd/kcd.ini")):
         ini_file = self.bind_ini_file()
 
         # Write config section.
@@ -768,7 +773,7 @@ class RootConfigNode(AbstractConfigNode):
         else: delete_file(restriction_path)
     
     # Write configuration to kfs.ini.
-    def write_kfs_ini(self, file_path='/etc/teambox/kcd/kfs.ini'):
+    def write_kfs_ini(self, file_path=os.path.join(CONF_DIR, 'kcd/kfs.ini')):
         ini_file = self.bind_ini_file()
         ini_file.add_section('config')
         for name in ['kfs_mode', 'kfs_purge_delay', 'kfs_dir', 'smb_mount_unc', 

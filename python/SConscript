@@ -15,7 +15,7 @@
 # limitations under the License.
 
 import os
-Import('BUILD_ENV opts_dict')
+Import('BUILD_ENV opts_dict BINDIR')
 
 python_FILES = [
     'kanp.py',
@@ -30,27 +30,32 @@ python_FILES = [
     'ksamba.py']
 
 python_PROGS = [
-    'kasmond',
-    'kcdhelper',
-    'kcdshell']
+    'kasmond.py',
+    'kcdhelper.py',
+    'kcdshell.py']
 
 installs = []
 
-BUILD_ENV.Dir(opts_dict['PYTHONDIR'])
+# Predefine LINESEPARATOR or Textfile will choke.
+tf_env = BUILD_ENV.Clone()
+tf_env.Append(PYTHONDIR = opts_dict['PYTHONDIR'],
+              WWWDIR = opts_dict['WWWDIR'])
+tf_env['LINESEPARATOR'] = os.linesep
 
 for pf in python_FILES:
-    installs.append(BUILD_ENV.Install(dir = opts_dict['PYTHONDIR'], target = pf))
+    installs += tf_env.Install(dir = Dir(opts_dict['PYTHONDIR']), 
+                                      target = pf)
 
-for pp in python_PROGS:
-    shName = os.path.splitext(os.path.basename(pp))[0]
-    # Predefine LINESEPARATOR or Textfile will choke.
-    BUILD_ENV['LINESEPARATOR'] = os.linesep
-    psh = BUILD_ENV.Textfile(shName, ["#!/bin/sh",
-                                      "export PYTHONPATH=$PYTHONDIR",
-                                      "$PYTHONDIR/" + str(pp) + ' $@'])
-    installs.append(BUILD_ENV.Install(dir = opts_dict['PYTHONDIR'], target = pp))
-    shInst = BUILD_ENV.Install(dir = opts_dict['BINDIR'], target = psh)
-    BUILD_ENV.AddPostAction(shInst, Chmod("$TARGET", 0755))
-    installs.append(shInst)
+for pyName in python_PROGS:
+    shName = os.path.splitext(os.path.basename(pyName))[0]
+
+    tf_env.Textfile(shName, ["#!/bin/sh",
+                             "export PYTHONPATH=$PYTHONDIR",
+                             "$PYTHONDIR/" + str(pyName) + ' $@'])
+    installs += tf_env.Install(target = opts_dict['PYTHONDIR'], 
+                               source = pyName)
+    shInst = tf_env.Install(target = BINDIR, source = shName)
+    tf_env.AddPostAction(shInst, Chmod("$TARGET", 0755))
+    installs += shInst
 
 Return('installs')

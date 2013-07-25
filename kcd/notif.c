@@ -1746,15 +1746,21 @@ static int kcd_notif_loop_have_conn(struct kcd_notif_state *st, struct kselect *
 /* Reconnect to the database and listen to the workspaces. */
 static int kcd_notif_attempt_connect(struct kcd_notif_state *st) {
     int error = 0;
-    kstr query;
+    kstr query, conn_str;
 
     kstr_init(&query);
+    kstr_init(&conn_str);
 
     kmod_log_msg(KCD_LOG_NOTIF, "kcd_notif_attempt_connect() called.\n");
 
     do {
         /* Connect to the database. */
-        error = kcd_open_pg_conn(&st->conn, "dbname=kcd");
+        kstr_sf(&conn_str, "dbname=%s user=%s password=%s host=%s port=%s", 
+                global_opts.db_name.data, global_opts.db_user.data,
+                global_opts.db_password.data, global_opts.db_host.data,
+                global_opts.db_port.data);
+
+        error = kcd_open_pg_conn(&st->conn, conn_str.data);
         if (error) break;
 
         /* Freeze the database state. */
@@ -1780,6 +1786,7 @@ static int kcd_notif_attempt_connect(struct kcd_notif_state *st) {
     } while (0);
 
     kstr_clean(&query);
+    kstr_clean(&conn_str);
 
     return error;
 }

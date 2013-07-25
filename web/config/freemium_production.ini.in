@@ -13,15 +13,20 @@ port = 5000
 use = egg:freemium
 static_files = true
 cache_dir = /tmp/freemium/data
-beaker.session.type = ext:database
-beaker.session.url = postgres:///kwmo?host=/var/run/postgresql/
+beaker.session.type = file
 beaker.session.cookie_expires = False
 beaker.session.key = freemium
 beaker.session.secret = somesecret
 
+freemium_db_user = freemium
+freemium_db_pwd = freemium_replace_this_password
+freemium_db_host = localhost
+freemium_db_port = 5432
+freemium_db_name = freemium
+
 # RPC url and credentials
 # FIXME hard-coded xmlrpc url
-rpc_url = https://localhost:9000/kpsapi/tbsos-xmlrpc.py
+rpc_url = http://localhost/api/api.py
 rpc_login = freemium
 rpc_password = hard-coded-pass
 

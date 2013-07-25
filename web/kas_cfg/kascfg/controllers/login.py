@@ -1,7 +1,7 @@
 import logging
 
 from pylons import request, response, session as web_session, tmpl_context as c
-from pylons.controllers.util import abort, redirect_to
+from pylons.controllers.util import abort, redirect
 from routes import url_for
 from kascfg.lib.base import BaseController, render, ui_error
 from kascfg.lib.config import load_master_config
@@ -33,7 +33,7 @@ class LoginController(BaseController):
     def login(self):
         # The user is already logged in; redirect to the status page.
         if web_session.has_key('logged') and web_session['logged']:
-            return redirect_to(url_for('status'))
+            return redirect(url_for('status'))
 
         # Initialize web session.
         self._init_session()
@@ -55,7 +55,7 @@ class LoginController(BaseController):
                     self._login()
 
                     # Redirect to the status page.
-                    return redirect_to(url_for('status'))
+                    return redirect(url_for('status'))
 
                 else:
                     # Show a bad password message.
@@ -76,5 +76,5 @@ class LoginController(BaseController):
         # Reinitialize session.
         self._init_session()
 
-        return redirect_to(url_for('login'))
+        return redirect(url_for('login'))
 

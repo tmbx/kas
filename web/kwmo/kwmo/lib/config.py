@@ -6,6 +6,8 @@ import os, logging, threading
 
 log = logging.getLogger(__name__)
 
+from pylons import config
+
 # from kpython
 from kbase import PropStore
 from krun import get_cmd_output
@@ -82,23 +84,24 @@ def detect_cached_config_change(callback, path=default_master_file_path):
 
 # Get local database url.
 def get_local_db_url():
-    url = 'postgres:///kwmo?host=/var/run/postgresql/'
-
+    kwmo_db_user = config['kwmo_db_user']
+    kwmo_db_pwd = config['kwmo_db_pwd']
+    kwmo_db_host = config['kwmo_db_host']
+    kwmo_db_port = config['kwmo_db_port']
+    kwmo_db_name = config['kwmo_db_name']
+    url = 'postgres://%s:%s@%s:%s/%s' % \
+        (kwmo_db_user, kwmo_db_pwd, kwmo_db_host, kwmo_db_port, kwmo_db_name)
     return url
 
 # Get KCD database url.
 def get_kcd_db_url():
-    if _config_cache.kcd_db_host != None and _config_cache.kcd_db_host != '':
-        kcd_host = _config_cache.kcd_db_host
-        kcd_db_user = 'external'
-        kcd_db_pwd = _config_cache.kcd_pwd
-        if not kcd_db_pwd: kcd_db_pwd = _config_cache.admin_pwd
-
-        url = 'postgres://%s:%s@%s:5432/kcd' % ( kcd_db_user, kcd_db_pwd, kcd_host )
-
-    else:
-        url = 'postgres:///kcd?host=/var/run/postgresql/'
-
+    kcd_db_user = config['kcd_db_user']
+    kcd_db_pwd = config['kcd_db_pwd']
+    kcd_db_host = config['kcd_db_host']
+    kcd_db_port = config['kcd_db_port']
+    kcd_db_name = config['kcd_db_name']
+    url = 'postgres://%s:%s@%s:%s/%s' % \
+        (kcd_db_user, kcd_db_pwd, kcd_db_host, kcd_db_port, kcd_db_name)
     return url
 
 # Get cached kcd external config object.

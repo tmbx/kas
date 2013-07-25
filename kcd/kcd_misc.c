@@ -270,6 +270,7 @@ int kcd_do_anp_xfer(struct anp_tls_xfer *xfer, struct ktls_conn *conn) {
 static int kcd_start_kmod(int *kmod_sock, int *kmod_pid) {
     int error = 0;
     int sock_pair[2] = { -1, -1 };
+    char *catchall_psw = NULL, *catchall_arg = NULL, catchall_sw[] = "-z";
     
     kmod_log_msg(KCD_LOG_KMOD, "kcd_start_kmod() called.\n");
 
@@ -308,9 +309,18 @@ static int kcd_start_kmod(int *kmod_sock, int *kmod_pid) {
 	    close(sock_pair[0]);
 	    close(sock_pair[1]);
 
+            if (global_opts.catchall_tbx.slen != 0) {
+                catchall_psw = catchall_sw;
+                catchall_arg = global_opts.catchall_tbx.data;
+            }
+
 	    /* Execute or die. */
-	    execl(global_opts.kmod_binary_path.data, global_opts.kmod_binary_path.data, "-C", "inherited", "-l", "2",
-		  "-k", global_opts.kmod_db_path.data, NULL);
+	    execl(global_opts.kmod_binary_path.data, global_opts.kmod_binary_path.data, 
+                  "-C", "inherited",
+                  "-l", "2",
+		  "-k", global_opts.kmod_db_path.data,
+                  catchall_psw, catchall_arg,
+                  NULL);
 	    printf("Cannot execute kmod: %s.\n", strerror(errno));
 	    exit(1);
 	}

@@ -13,11 +13,24 @@ port = 5000
 use = egg:kwmo
 static_files = true
 cache_dir = /tmp/kwmo/data
-beaker.session.type = ext:database
-beaker.session.url = postgres:///kwmo?host=/var/run/postgresql/
+beaker.session.type = file
 beaker.session.cookie_expires = False
 beaker.session.key = kwmo
 beaker.session.secret = somesecret
+
+# KCD database.
+kcd_db_user = kcd
+kcd_db_pwd = kcd_replace_this_password
+kcd_db_host = localhost
+kcd_db_port = 5432
+kcd_db_name = kcd
+
+# KWMO database.
+kwmo_db_user = kwmo
+kwmo_db_pwd = kwmo_replace_this_password
+kwmo_db_host = localhost
+kwmo_db_port = 5432
+kwmo_db_name = kwmo
 
 set debug = false
 

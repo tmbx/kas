@@ -13,6 +13,10 @@
 # Connect to the database.
 <<< connect(kwmo) >>>
 
+# Create the freemium user
+<<< isnorole(kwmo), print(Creating database role kwmo) >>>
+CREATE ROLE kwmo LOGIN;
+
 # Create fixes table and insert fixes that must be ignored.
 <<< isnotable(kwmo_fix_table), print(Creating fixes table in kwmo database.) >>>
 

@@ -9,13 +9,12 @@ from kfile import first_existing_file
 
 # Paster configuration file.
 paster_config_path = first_existing_file([
-    '/usr/share/teambox/web/kwmo/production.ini',
-    'production.ini',
-    'development.ini'])
+        os.path.join(os.environ['KWMO_PATH'], 'production.ini'),
+        'production.ini',
+        'development.ini'])
 
 # Path for storing kwsfetcher information.
-#fetcher_path = "/var/teambox/kwsfetcher/workspaces"
-fetcher_path = "/tmp/teambox"
+fetcher_path = "/var/cache/teambox/kwsfetcher"
 
 # Keepalive parameters. See the Linux documentation for details. We want the
 # connection to time out after 6 minutes.
@@ -23,15 +22,15 @@ tcp_keepalive_time = 60
 tcp_keepalive_intvl = 60
 tcp_keepalive_probes = 5
 
-# from system
-import sys, os, time, re, select, struct, traceback, socket, getopt, logging, logging.config
-
 # Append kwmo application path to python path.
-sys.path.append('/usr/share/teambox/web/kwmo')
+sys.path.append(os.environ['KWMO_PATH'])
 
 # Add site directory (would work with PYTHONPATH but not with sys.path because sys.path does not 
 # handle PTH files).
-site.addsitedir('/usr/share/teambox/pylons_env/lib/python' + sys.version[:3] + '/site-packages')
+site.addsitedir(os.path.join(os.environ['VIRTUALENV'],
+                'lib',
+                'python' + sys.version[:3],
+                'site-packages'))
 
 # from system or kpylons
 from sqlalchemy.sql import and_

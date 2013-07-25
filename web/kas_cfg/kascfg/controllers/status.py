@@ -1,7 +1,7 @@
 import logging
 
 from pylons import request, response, session, tmpl_context as c
-from pylons.controllers.util import abort, redirect_to
+from pylons.controllers.util import abort, redirect
 from routes import url_for
 from kascfg.lib.base import BaseController, render, ui_info, ui_warn, ui_flash_error
 from kascfg.lib.services import K2Services
@@ -45,7 +45,7 @@ class StatusController(BaseController):
             ui_flash_error(message=str(e))
 
         # Redirect to status page.
-        redirect_to(url_for('status'))
+        redirect(url_for('status'))
 
     # Switch to maintenance mode.
     def switch_to_maint(self):
@@ -57,5 +57,5 @@ class StatusController(BaseController):
             ui_flash_error(message=str(e))
 
         # Redirect to status page.
-        redirect_to(url_for('status'))
+        redirect(url_for('status'))
 

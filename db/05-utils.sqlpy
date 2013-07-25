@@ -1,0 +1,30 @@
+-- Copyright (C) 2005-2012 Opersys inc., All rights reserved.
+
+<<< connect(template1) >>>
+
+create or replace function grant_to_all_tables(varchar, varchar) returns void as $$
+declare  
+  tbl record;
+  seq record;
+  usr alias for $1;
+  rights alias for $2;
+begin
+  for tbl in select * from information_schema.tables where table_schema = 'public' loop
+    execute 'grant '|| rights ||' on table "'|| tbl.table_name ||'" to '|| usr;
+  end loop;
+end
+$$ language plpgsql;
+
+create or replace function grant_to_all_sequences(varchar, varchar) returns void as
+$$
+declare  
+  tbl record;
+  seq record;
+  usr alias for $1;
+  rights alias for $2;
+begin
+  for seq in select * from information_schema.sequences where sequence_schema = 'public' loop
+    execute 'grant '|| rights ||' on table "'|| seq.sequence_name ||'" to '|| usr;
+  end loop;
+end
+$$ language plpgsql;

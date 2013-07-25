@@ -3,7 +3,7 @@ import logging, hashlib, time
 
 # from pylons
 from pylons import request, url, session as web_session, tmpl_context as c
-from pylons.controllers.util import abort, redirect_to
+from pylons.controllers.util import abort, redirect
 from routes import url_for
 from kascfg.model.kcd import Session as db_session
 from kascfg.lib.base import BaseController, render
@@ -216,7 +216,7 @@ class TeamboxesController(BaseController):
         url = "https://%s/teambox_admin/login/%s?stamp=%i&hash=%s" % \
             ( c.mc.kwmo_host, str(kws_id), stamp, str(hex_hash) )
 
-        return redirect_to(url)
+        return redirect(url)
 
     # This method is called when a query action has been specified.
     def kws_mgt_query_action(self):
